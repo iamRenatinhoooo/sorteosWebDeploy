@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link"; // Importación necesaria para la navegación 
+
 export default function Footer() {
   return (
     <footer style={{
@@ -32,13 +34,25 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Legal */}
+        {/* Legal - Secciones actualizadas según Prompt Maestro  */}
         <div>
-          <h4 style={{ fontSize: "0.7rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "1.25rem" }}>Información</h4>
-          <ul style={{ listStyle: "none", padding: 0, fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: "2" }}>
-            <li>Términos y Condiciones</li>
-            <li>Preguntas Frecuentes</li>
-            <li>Contacto directo</li>
+          <h4 style={{ fontSize: "0.7rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "1.25rem" }}>Información Legal</h4>
+          <ul style={{ listStyle: "none", padding: 0, fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: "2.2" }}>
+            <li>
+              <Link href="/legal/terminos" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
+                Términos y Condiciones
+              </Link>
+            </li>
+            <li>
+              <Link href="/legal/privacidad" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
+                Política de Privacidad
+              </Link>
+            </li>
+            <li>
+              <Link href="/legal/datos-personales" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
+                Tratamiento de Datos Personales
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

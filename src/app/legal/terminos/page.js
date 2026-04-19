@@ -1,5 +1,5 @@
-import LegalSection from "@/app/components/legal/LegalSection";
-import LegalTableOfContents from "@/app/components/legal/LegalTableOfContents";
+import LegalSection from "@/app/legal/LegalSection";
+import LegalTableOfContents from "@/app/legal/LegalTableOfContents";
 
 export const metadata = {
   title: "Términos y Condiciones — SorteosVIP",
