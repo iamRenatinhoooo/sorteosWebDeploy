@@ -52,8 +52,8 @@ export default function DatosPersonalesPage() {
         </LegalSection>
 
         <LegalSection index={2} id="responsable-dpo" title="Responsable y Delegado de Protección de Datos (DPO)">
-          <p>Sorteos La Fortuna (SorteosVIP), con domicilio en Guayaquil, Ecuador, asume la responsabilidad del tratamiento de sus datos personales.</p>
-          <p>Para garantizar el cumplimiento normativo, se ha designado un Delegado de Protección de Datos (DPO). Puede contactar con el DPO para consultas técnicas o reclamos al correo <strong>dpo@sorteosvip.ec</strong> o al teléfono +593 4 000-0000.</p>
+          <p>Sorteos La Fortuna, con domicilio en Guayaquil, Ecuador, asume la responsabilidad del tratamiento de sus datos personales.</p>
+          <p>Para garantizar el cumplimiento normativo, se ha designado un Delegado de Protección de Datos (DPO). Puede contactar con el DPO para consultas técnicas o reclamos al correo <strong>dpo@sorteoslafortuna.ec</strong> o al teléfono +593 9 6326-7270.</p>
         </LegalSection>
 
         <LegalSection index={3} id="categorias-titulares" title="Categorías de Titulares">
@@ -63,7 +63,7 @@ export default function DatosPersonalesPage() {
         <LegalSection index={4} id="categorias-datos" title="Categorías de Datos Tratados">
           <p><strong>A. Datos Ordinarios:</strong> Incluyen información de identificación (nombres, cédula), datos de contacto (correo, teléfono) y datos transaccionales de pago.</p>
           <p><strong>B. Datos de Navegación:</strong> Recopilamos IP, geolocalización aproximada, tipo de dispositivo, sistema operativo y duración de la sesión.</p>
-          <p style={{ fontWeight: "bold", color: "var(--accent-ruby)" }}>Declaración: SorteosVIP NO trata categorías especiales de datos como salud, biometría, origen étnico o filiación política.</p>
+          <p style={{ fontWeight: "bold", color: "var(--accent-ruby)" }}>Declaración: Sorteos La Fortuna NO trata categorías especiales de datos como salud, biometría, origen étnico o filiación política.</p>
         </LegalSection>
 
         <LegalSection index={5} id="principios" title="Principios Rectores (Art. 10 LOPDP)">
@@ -81,8 +81,8 @@ export default function DatosPersonalesPage() {
         </LegalSection>
 
         <LegalSection index={8} id="ejercicio-derechos" title="Ejercicio de Derechos">
-          <p>Para ejercer sus derechos, debe enviar una solicitud al correo <strong>dpo@sorteosvip.ec</strong> con el asunto "Ejercicio de Derechos LOPDP", adjuntando copia de su documento de identidad.</p>
-          <p>SorteosVIP responderá en un plazo máximo de 15 días hábiles. También puede presentar una reclamación ante la ADPE si considera que sus derechos han sido vulnerados.</p>
+          <p>Para ejercer sus derechos, debe enviar una solicitud al correo <strong>dpo@sorteoslafortuna.ec</strong> con el asunto "Ejercicio de Derechos LOPDP", adjuntando copia de su documento de identidad.</p>
+          <p>Sorteos La Fortuna responderá en un plazo máximo de 15 días hábiles. También puede presentar una reclamación ante la ADPE si considera que sus derechos han sido vulnerados.</p>
         </LegalSection>
 
         <LegalSection index={9} id="transferencias" title="Transferencias Internacionales">
@@ -114,3 +114,4 @@ export default function DatosPersonalesPage() {
     </div>
   );
 }
+

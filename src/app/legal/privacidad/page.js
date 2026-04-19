@@ -64,8 +64,8 @@ export default function PrivacidadPage() {
         </div>
 
         <LegalSection index={1} id="responsable" title="Responsable del Tratamiento">
-          <p>Sorteos La Fortuna (SorteosVIP), con domicilio legal en la ciudad de Guayaquil, Guayas, República del Ecuador, actúa como Responsable del Tratamiento de sus datos personales conforme a la normativa vigente[cite: 30, 140, 141].</p>
-          <p>Para garantizar la protección de su información, hemos designado canales específicos de atención. Puede contactar con nuestro Delegado de Protección de Datos (DPO) a través de los correos electrónicos <strong>dpo@sorteosvip.ec</strong> y <strong>privacidad@sorteosvip.ec</strong>, o al teléfono +593 4 000-0000[cite: 31, 32, 33, 142, 143].</p>
+          <p>Sorteos La Fortuna, con domicilio legal en la ciudad de Guayaquil, Guayas, República del Ecuador, actúa como Responsable del Tratamiento de sus datos personales conforme a la normativa vigente[cite: 30, 140, 141].</p>
+          <p>Para garantizar la protección de su información, hemos designado canales específicos de atención. Puede contactar con nuestro Delegado de Protección de Datos (DPO) a través de los correos electrónicos <strong>dpo@sorteoslafortuna.ec</strong> y <strong>privacidad@sorteoslafortuna.ec</strong>, o al teléfono +593 9 6326-7270[cite: 31, 32, 33, 142, 143].</p>
           <p>Nos comprometemos a gestionar sus datos bajo los principios de licitud, transparencia y lealtad, asegurando que su privacidad sea nuestra prioridad en cada interacción con la plataforma.</p>
         </LegalSection>
 
@@ -101,7 +101,7 @@ export default function PrivacidadPage() {
 
         <LegalSection index={7} id="derechos" title="Derechos del Titular (ARCO+)">
           <p>Como titular de los datos, usted goza de los derechos de Acceso, Rectificación, Supresión, Oposición, Portabilidad y Limitación del tratamiento establecidos en la LOPDP[cite: 167, 168].</p>
-          <p>Para ejercer estos derechos, debe enviar una solicitud escrita al correo <strong>privacidad@sorteosvip.ec</strong> adjuntando una copia legible de su documento de identidad para validar su titularidad[cite: 169].</p>
+          <p>Para ejercer estos derechos, debe enviar una solicitud escrita al correo <strong>privacidad@sorteoslafortuna.ec</strong> adjuntando una copia legible de su documento de identidad para validar su titularidad[cite: 169].</p>
           <p>Nuestro equipo legal y el DPO darán respuesta a su requerimiento en un plazo máximo de 15 días hábiles, informándole sobre las acciones tomadas respecto a su solicitud[cite: 170].</p>
         </LegalSection>
 
