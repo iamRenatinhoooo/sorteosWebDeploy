@@ -263,138 +263,152 @@ export default function SorteosPage() {
             </div>
           </div>
 
-          {/* --- GRID DE TARJETAS --- */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "2rem", marginBottom: "4rem" }}>
-            {filteredPrizes.length > 0 ? (
-              filteredPrizes.map((prize) => {
-                const isFinished = activeTab === "finished";
-                const isUpcoming = activeTab === "upcoming";
-                const isActive = selected === prize.id;
-                const taken = takenMap[prize.id]?.size || 0;
-                const free = prize.total_boletos - taken;
-                const pct = (taken / prize.total_boletos) * 100;
-                
-                const timeLeft = !isFinished && !isUpcoming ? calculateTimeLeft(prize.fecha_sorteo, prize.hora_sorteo) : null;
-                const rgbShadow = hexToRgb(prize.color);
+{/* ══════════ GRID DE TARJETAS (REDISEÑO COMPLETO) ══════════ */}
+<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "2rem", marginBottom: "4rem" }}>
+  {filteredPrizes.length > 0 ? (
+    filteredPrizes.map((prize) => {
+      const isFinished = activeTab === "finished";
+      const isUpcoming = activeTab === "upcoming";
+      const isActive = selected === prize.id;
+      const taken = takenMap[prize.id]?.size || 0;
+      const free = prize.total_boletos - taken;
+      const pct = (taken / prize.total_boletos) * 100;
+      
+      const timeLeft = !isFinished && !isUpcoming ? calculateTimeLeft(prize.fecha_sorteo, prize.hora_sorteo) : null;
+      const rgbShadow = hexToRgb(prize.color);
 
-                return (
-                  <div
-                    key={prize.id}
-                    style={{
-                      background: isActive ? "var(--bg-elevated)" : "var(--bg-surface)",
-                      border: isActive ? "2px solid var(--accent-gold)" : "1px solid var(--border-subtle)",
-                      borderRadius: "var(--r-lg)", padding: "1.5rem",
-                      display: "flex", flexDirection: "column", gap: "1rem",
-                      position: "relative", overflow: "hidden",
-                      boxShadow: isActive ? `0 12px 40px rgba(${rgbShadow}, 0.2)` : "var(--card-shadow)",
-                      transition: "all 0.4s var(--ease)",
-                      transform: isActive ? "translateY(-8px)" : "translateY(0)",
-                      filter: isFinished ? "grayscale(0.5)" : "none",
-                    }}
-                  >
-                    <div style={{
-                      position: "absolute", top: "0.75rem", right: "0.75rem",
-                      background: isFinished ? "#555" : isUpcoming ? "var(--accent-navy)" : prize.color,
-                      color: "#FFFFFF", fontSize: "0.6rem", borderRadius: "100px",
-                      padding: "0.2rem 0.65rem", fontWeight: 700, textTransform: "uppercase", zIndex: 10
-                    }}>
-                      {isFinished ? "CERRADO" : isUpcoming ? "PRONTO" : "ACTIVO"}
-                    </div>
+      return (
+        <div
+          key={prize.id}
+          style={{
+            background: isActive ? "var(--bg-elevated)" : "var(--bg-surface)",
+            border: isActive ? "2px solid var(--accent-gold)" : "1px solid var(--border-subtle)",
+            borderRadius: "var(--r-lg)",
+            display: "flex", 
+            flexDirection: "column",
+            position: "relative", 
+            overflow: "hidden",
+            boxShadow: isActive ? `0 12px 40px rgba(${rgbShadow}, 0.2)` : "var(--card-shadow)",
+            transition: "all 0.4s var(--ease)",
+            transform: isActive ? "translateY(-8px)" : "translateY(0)",
+            filter: isFinished ? "grayscale(0.5)" : "none",
+          }}
+        >
+          {/* SECCIÓN 1: IMAGEN Y BADGE FLOTANTE */}
+          <div style={{ position: "relative", width: "100%", height: "200px", background: "var(--bg-sunken)" }}>
+            <img 
+              src={prize.imagen_url || "/images/sorteos/galapagos-premio.png"} 
+              alt={prize.nombre}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+            <div style={{ position: "absolute", top: "12px", left: "12px", zIndex: 10 }}>
+              <div style={{
+                background: isFinished ? "#555" : isUpcoming ? "var(--accent-navy)" : prize.color,
+                color: "#FFFFFF", fontSize: "0.65rem", borderRadius: "4px",
+                padding: "0.35rem 0.8rem", fontWeight: 800, textTransform: "uppercase",
+                boxShadow: "0 4px 10px rgba(0,0,0,0.3)", backdropFilter: "blur(4px)"
+              }}>
+                {isFinished ? "Finalizado" : isUpcoming ? "Próximamente" : "Activo"}
+              </div>
+            </div>
+          </div>
 
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start" }}>
-                      <div style={{ fontSize: "3rem", background: "var(--bg-sunken)", padding: "0.5rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-subtle)" }}>
-                        {prize.emoji}
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontFamily: "var(--font-brand)", fontSize: "1.6rem", color: "var(--accent-gold)", fontWeight: 700 }}>
-                          ${Number(prize.precio_boleto).toFixed(2)}
-                        </div>
-                        <div className="label-xs">por boleto</div>
-                      </div>
-                    </div>
+          {/* SECCIÓN 2: DETALLES PRINCIPALES */}
+          <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
+            <div>
+              <h3 style={{ fontFamily: "var(--font-brand)", fontSize: "1.2rem", fontWeight: 700, margin: "0 0 0.5rem", color: "var(--text-primary)" }}>
+                {prize.nombre}
+              </h3>
+              <div style={{ display: "flex", alignItems: "baseline", gap: "0.4rem" }}>
+                <span style={{ fontFamily: "var(--font-numbers)", fontSize: "1.8rem", fontWeight: "700", color: "var(--accent-gold)" }}>
+                  ${Number(prize.precio_boleto).toFixed(2)}
+                </span>
+                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", textTransform: "uppercase" }}>por boleto</span>
+              </div>
+            </div>
 
-                    <div>
-                      <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", fontWeight: 700, margin: "0 0 0.5rem", color: "var(--text-primary)" }}>
-                        {prize.nombre}
-                      </h3>
-                      <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: "0 0 1rem", lineHeight: "1.4" }}>
-                        {prize.descripcion}
-                      </p>
-                      
-                      {!isFinished && (
-                        <div style={{ marginBottom: "1rem" }}>
-                          <div style={{ height: "4px", background: "var(--border-subtle)", borderRadius: "100px", overflow: "hidden" }}>
-                            <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(to right, ${prize.color}, var(--accent-gold))`, borderRadius: "100px" }} />
-                          </div>
-                          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.65rem", marginTop: "0.3rem", color: "var(--text-muted)" }}>
-                            <span>{taken} vendidos</span>
-                            <span>{free} disponibles</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    <div style={{ background: "var(--bg-sunken)", padding: "0.75rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-subtle)", fontSize: "0.75rem" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
-                        <span style={{ color: "var(--text-muted)" }}>Fecha:</span>
-                        <span style={{ fontWeight: 700 }}>{prize.fecha_sorteo || "Pendiente"}</span>
-                      </div>
-                      <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ color: "var(--text-muted)" }}>Hora:</span>
-                        <span style={{ fontWeight: 700 }}>{prize.hora_sorteo || "20:00"}</span>
-                      </div>
-                    </div>
-
-                    <div style={{ marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)" }}>
-                      {isFinished ? (
-                        <div style={{ textAlign: "center" }}>
-                          <div className="label-xs" style={{ color: "var(--accent-gold)" }}>Ganador Oficial 🏆</div>
-                          <div style={{ fontWeight: 700 }}>{prize.ganador_nombre || "Pendiente..."}</div>
-                          <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Boleto: #{prize.numero_ganador || "-"}</div>
-                        </div>
-                      ) : isUpcoming ? (
-                        <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "0.75rem", fontStyle: "italic" }}>
-                          Ventas abren pronto
-                        </div>
-                      ) : (
-                        <div style={{ textAlign: "center" }}>
-                          <div className="label-xs" style={{ color: "var(--accent-ruby)", marginBottom: "0.4rem" }}>Cierra en: ⏳</div>
-                          <div style={{ display: "flex", gap: "0.4rem", justifyContent: "center", fontFamily: "var(--font-numbers)", fontSize: "1.1rem" }}>
-                            <span style={{ background: "var(--bg-sunken)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>{timeLeft?.days || 0}D</span>
-                            <span style={{ background: "var(--bg-sunken)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>{timeLeft?.hours || 0}H</span>
-                            <span style={{ background: "var(--bg-sunken)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>{timeLeft?.minutes || 0}M</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {activeTab === 'active' && (
-                      <button 
-                        onClick={() => {
-                          setSelected(isActive ? null : prize.id);
-                          setShowPayment(false); 
-                        }}
-                        style={{
-                          width: "100%", marginTop: "1rem", padding: "0.8rem",
-                          background: isActive ? "var(--bg-sunken)" : prize.color,
-                          color: isActive ? prize.color : "#fff",
-                          border: isActive ? `1px solid ${prize.color}` : "none",
-                          borderRadius: "var(--r-sm)", fontWeight: 700, textTransform: "uppercase", fontSize: "0.75rem",
-                          cursor: "pointer", transition: "0.3s",
-                        }}
-                      >
-                        {isActive ? "✓ Seleccionado" : "Participar Ahora"}
-                      </button>
-                    )}
-                  </div>
-                );
-              })
-            ) : (
-              <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem", color: "var(--text-muted)" }}>
-                No hay sorteos en esta categoría.
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", margin: 0, lineHeight: "1.4" }}>
+              {prize.descripcion}
+            </p>
+            
+            {/* BARRA DE PROGRESO (RECUPERADA) */}
+            {!isFinished && (
+              <div style={{ marginBottom: "0.5rem" }}>
+                <div style={{ height: "4px", background: "var(--border-subtle)", borderRadius: "100px", overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${pct}%`, background: `linear-gradient(to right, ${prize.color}, var(--accent-gold))`, borderRadius: "100px" }} />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.65rem", marginTop: "0.3rem", color: "var(--text-muted)" }}>
+                  <span>{taken} vendidos</span>
+                  <span>{free} disponibles</span>
+                </div>
               </div>
             )}
+
+            {/* INFO BOX: FECHA Y HORA (RECUPERADA) */}
+            <div style={{ background: "var(--bg-sunken)", padding: "0.75rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-subtle)", fontSize: "0.75rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
+                <span style={{ color: "var(--text-muted)" }}>Fecha:</span>
+                <span style={{ fontWeight: 700 }}>{prize.fecha_sorteo || "Pendiente"}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span style={{ color: "var(--text-muted)" }}>Hora:</span>
+                <span style={{ fontWeight: 700 }}>{prize.hora_sorteo || "20:00"}</span>
+              </div>
+            </div>
+
+            {/* SECCIÓN 3: ESTADO DINÁMICO (CONTADOR O GANADOR) */}
+            <div style={{ marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)" }}>
+              {isFinished ? (
+                <div style={{ textAlign: "center" }}>
+                  <div className="label-xs" style={{ color: "var(--accent-gold)" }}>Ganador Oficial 🏆</div>
+                  <div style={{ fontWeight: 700 }}>{prize.ganador_nombre || "Pendiente..."}</div>
+                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>Boleto: #{prize.numero_ganador || "-"}</div>
+                </div>
+              ) : isUpcoming ? (
+                <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "0.75rem", fontStyle: "italic" }}>
+                  Ventas abren pronto
+                </div>
+              ) : (
+                <div style={{ textAlign: "center" }}>
+                  <div className="label-xs" style={{ color: "var(--accent-ruby)", marginBottom: "0.4rem" }}>Cierra en: ⏳</div>
+                  <div style={{ display: "flex", gap: "0.4rem", justifyContent: "center", fontFamily: "var(--font-numbers)", fontSize: "1.1rem" }}>
+                    <span style={{ background: "var(--bg-sunken)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>{timeLeft?.days || 0}D</span>
+                    <span style={{ background: "var(--bg-sunken)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>{timeLeft?.hours || 0}H</span>
+                    <span style={{ background: "var(--bg-sunken)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>{timeLeft?.minutes || 0}M</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* BOTÓN DE ACCIÓN */}
+            {activeTab === 'active' && (
+              <button 
+                onClick={() => {
+                  setSelected(isActive ? null : prize.id);
+                  setShowPayment(false); 
+                }}
+                style={{
+                  width: "100%", marginTop: "1rem", padding: "0.8rem",
+                  background: isActive ? "var(--bg-sunken)" : prize.color,
+                  color: isActive ? prize.color : "#fff",
+                  border: isActive ? `1px solid ${prize.color}` : "none",
+                  borderRadius: "var(--r-sm)", fontWeight: 700, textTransform: "uppercase", fontSize: "0.75rem",
+                  cursor: "pointer", transition: "0.3s",
+                }}
+              >
+                {isActive ? "✓ Seleccionado" : "Participar Ahora"}
+              </button>
+            )}
           </div>
+        </div>
+      );
+    })
+  ) : (
+    <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem", color: "var(--text-muted)" }}>
+      No hay sorteos en esta categoría.
+    </div>
+  )}
+</div>
         </section>
 
         {/* --- PANEL DE SELECCIÓN DE NÚMEROS --- */}
