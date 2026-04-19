@@ -15,7 +15,7 @@ export default function Footer() {
         {/* Marca */}
         <div>
           <div style={{ fontFamily: "'Cinzel', serif", fontSize: "1.3rem", fontWeight: 700, color: "var(--accent-gold)", marginBottom: "1rem" }}>
-            ♦ Sorteos<span style={{ color: "var(--accent-ruby)" }}>VIP</span>
+            ♦ Sorteos<span style={{ color: "var(--accent-ruby)" }}> La Fortuna</span>
           </div>
           <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", lineHeight: 1.7 }}>
             Llevando alegría y premios increíbles desde Guayaquil para todo el país.
@@ -59,7 +59,7 @@ export default function Footer() {
 
       <div style={{ textAlign: "center", marginTop: "3rem", borderTop: "1px solid var(--border-subtle)", paddingTop: "1.5rem" }}>
         <p style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-          © 2026 SorteosVIP · Todos los derechos reservados · Ecuador
+          © 2026 Sorteos La Fortuna · Todos los derechos reservados · Ecuador
         </p>
         <p style={{ fontSize: "0.7rem", color: "var(--text-muted)", opacity: 0.7 }}>
           🔞 Solo para mayores de 18 años. Juega responsablemente.
