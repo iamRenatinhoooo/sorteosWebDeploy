@@ -1,4 +1,3 @@
-
 import LegalSection from "@/app/components/legal/LegalSection";
 import LegalTableOfContents from "@/app/components/legal/LegalTableOfContents";
 

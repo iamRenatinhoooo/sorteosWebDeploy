@@ -1,5 +1,6 @@
-
+// En src/app/legal/terminos/page.js y los demás:
 import LegalSection from "@/app/components/legal/LegalSection";
+
 
 
 export default function PrivacidadPage() {
