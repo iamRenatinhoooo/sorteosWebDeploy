@@ -2,7 +2,7 @@ import LegalSection from "@/app/components/legal/LegalSection";
 import LegalTableOfContents from "@/app/components/legal/LegalTableOfContents";
 
 export const metadata = {
-  title: "Términos y Condiciones — SorteosVIP",
+  title: "Términos y Condiciones — Sorteos La Fortuna",
   description: "Marco legal y condiciones de participación para los sorteos de SorteosVIP en Ecuador.",
 };
 
@@ -33,9 +33,9 @@ export default function TerminosPage() {
         </header>
 
         <LegalSection index={1} id="aceptacion" title="Aceptación de los Términos">
-          <p>El acceso y uso de la plataforma SorteosVIP implica la aceptación plena, expresa e incondicional de los presentes Términos y Condiciones por parte del usuario. Al registrarse o participar en cualquier sorteo, usted declara haber leído y comprendido la totalidad de este documento jurídico[cite: 865, 866].</p>
+          <p>El acceso y uso de la plataforma Sorteos La Fortuna implica la aceptación plena, expresa e incondicional de los presentes Términos y Condiciones por parte del usuario. Al registrarse o participar en cualquier sorteo, usted declara haber leído y comprendido la totalidad de este documento jurídico[cite: 865, 866].</p>
           <p>En caso de no estar de acuerdo con alguna de las disposiciones aquí establecidas, el usuario deberá abstenerse inmediatamente de utilizar los servicios de la plataforma. El uso continuado del sitio tras cualquier modificación constituye la aceptación de los nuevos términos[cite: 867].</p>
-          <p>La participación en nuestras rifas y sorteos genera una vinculación jurídica contractual entre SorteosVIP y el participante, regida por el Código de Comercio de la República del Ecuador y las normativas civiles vigentes[cite: 868, 898].</p>
+          <p>La participación en nuestras rifas y sorteos genera una vinculación jurídica contractual entre Sorteos La Fortuna y el participante, regida por el Código de Comercio de la República del Ecuador y las normativas civiles vigentes[cite: 868, 898].</p>
         </LegalSection>
 
         <LegalSection index={2} id="requisitos" title="Requisitos de Participación">
