@@ -3,6 +3,55 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
+// Función para comprimir imágenes antes de subirlas (Max ~300KB)
+const compressImage = (file, maxSizeKB = 300) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        const MAX_SIZE = 1200;
+        if (width > height && width > MAX_SIZE) {
+          height *= MAX_SIZE / width;
+          width = MAX_SIZE;
+        } else if (height > MAX_SIZE) {
+          width *= MAX_SIZE / height;
+          height = MAX_SIZE;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        let quality = 0.9;
+        const checkSizeAndResolve = () => {
+          canvas.toBlob((blob) => {
+            if (blob.size / 1024 > maxSizeKB && quality > 0.1) {
+              quality -= 0.1;
+              checkSizeAndResolve(); 
+            } else {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, ".jpg"), {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            }
+          }, "image/jpeg", quality);
+        };
+        
+        checkSizeAndResolve();
+      };
+    };
+  });
+};
+
 export default function AdminPage() {
   const [session, setSession] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -17,9 +66,11 @@ export default function AdminPage() {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false); 
   const [editingSorteoId, setEditingSorteoId] = useState(null);
+  
   const [newSorteo, setNewSorteo] = useState({
-    nombre: "", estado: "upcoming", descripcion: "", emoji: "🎁", color: "#C9A84C",
+    nombre: "", estado: "upcoming", descripcion: "", imagen_url: "", color: "#C9A84C",
     total_boletos: 100, precio_boleto: 5.00, fecha_sorteo: "", hora_sorteo: ""
   });
 
@@ -29,6 +80,26 @@ export default function AdminPage() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [winner, setWinner] = useState(null);
   const [rotation, setRotation] = useState(0); 
+
+  // --- NUEVO: SISTEMA DE MODALES PERSONALIZADOS ---
+  const [alertModal, setAlertModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "info", // 'info', 'success', 'error', 'warning', 'confirm'
+    onConfirm: null
+  });
+
+  const showAlert = (title, message, type = "info") => {
+    setAlertModal({ isOpen: true, title, message, type, onConfirm: null });
+  };
+
+  const showConfirm = (title, message, onConfirmCallback) => {
+    setAlertModal({ isOpen: true, title, message, type: "confirm", onConfirm: onConfirmCallback });
+  };
+
+  const closeAlert = () => setAlertModal(prev => ({ ...prev, isOpen: false }));
+  // -------------------------------------------------
 
   useEffect(() => {
     const checkUser = async () => {
@@ -77,7 +148,7 @@ export default function AdminPage() {
   const fetchDashboardData = async () => {
     const { data: dataPedidos, error: errPedidos } = await supabase
       .from('pedidos')
-      .select(`*, clientes (nombre, apellidos, telefono, email), sorteos (nombre), boletos (numero)`)
+      .select(`*, clientes (nombre, apellidos, telefono, email, fecha_nacimiento, es_mayor_edad), sorteos (nombre), boletos (numero)`)
       .order('created_at', { ascending: false });
     if (!errPedidos) setPedidos(dataPedidos);
 
@@ -88,32 +159,83 @@ export default function AdminPage() {
     if (!errSorteos) setSorteos(dataSorteos);
   };
 
-  const aprobarPago = async (pedidoId) => {
-    if(!confirm("¿Estás seguro de marcar este pedido como COMPLETADO? Los boletos pasarán a estado 'pagado'.")) return;
-    try {
-      const { error: errPedido } = await supabase.from('pedidos').update({ estado_pago: 'completado' }).eq('id', pedidoId);
-      if (errPedido) throw errPedido;
-      const { error: errBoletos } = await supabase.from('boletos').update({ estado: 'pagado' }).eq('pedido_id', pedidoId);
-      if (errBoletos) throw errBoletos;
-      alert("Pago aprobado con éxito.");
-      fetchDashboardData(); 
-    } catch (error) { alert("Error: " + error.message); }
+  // MODIFICADO: Utilizando Modal de Confirmación Personalizado
+  const gestionarPedido = (pedidoId, accion) => {
+    const esAprobar = accion === 'aprobar';
+    
+    showConfirm(
+      esAprobar ? "Aprobar Pedido" : "Rechazar Pedido",
+      `¿Estás seguro de ${esAprobar ? 'APROBAR' : 'RECHAZAR'} este pedido?`,
+      async () => {
+        try {
+          const nuevoEstadoPago = esAprobar ? 'completado' : 'cancelado';
+          const { error: errPedido } = await supabase.from('pedidos').update({ estado_pago: nuevoEstadoPago }).eq('id', pedidoId);
+          if (errPedido) throw errPedido;
+          
+          if (esAprobar) {
+            const { error: errBoletos } = await supabase.from('boletos').update({ estado: 'pagado' }).eq('pedido_id', pedidoId);
+            if (errBoletos) throw errBoletos;
+          } else {
+            const { error: errBoletos } = await supabase.from('boletos').delete().eq('pedido_id', pedidoId);
+            if (errBoletos) throw errBoletos;
+          }
+          
+          showAlert("Éxito", `El pedido ha sido marcado como ${nuevoEstadoPago}.`, "success");
+          fetchDashboardData(); 
+        } catch (error) { 
+          showAlert("Error", "No se pudo procesar el pedido: " + error.message, "error"); 
+        }
+      }
+    );
   };
 
   const openCrearModal = () => {
     setEditingSorteoId(null);
-    setNewSorteo({ nombre: "", estado: "upcoming", descripcion: "", emoji: "🎁", color: "#C9A84C", total_boletos: 100, precio_boleto: 5.00, fecha_sorteo: "", hora_sorteo: "" });
+    setNewSorteo({ nombre: "", estado: "upcoming", descripcion: "", imagen_url: "", color: "#C9A84C", total_boletos: 100, precio_boleto: 5.00, fecha_sorteo: "", hora_sorteo: "" });
     setShowCreateModal(true);
   };
 
   const openEditarModal = (sorteo) => {
     setEditingSorteoId(sorteo.id);
     setNewSorteo({
-      nombre: sorteo.nombre, estado: sorteo.estado, descripcion: sorteo.descripcion || "", emoji: sorteo.emoji || "🎁",
+      nombre: sorteo.nombre, estado: sorteo.estado, descripcion: sorteo.descripcion || "", 
+      imagen_url: sorteo.imagen_url || "",
       color: sorteo.color || "#C9A84C", total_boletos: sorteo.total_boletos, precio_boleto: sorteo.precio_boleto,
       fecha_sorteo: sorteo.fecha_sorteo || "", hora_sorteo: sorteo.hora_sorteo || ""
     });
     setShowCreateModal(true);
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingImage(true);
+
+    try {
+      const compressedFile = await compressImage(file, 300);
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.jpg`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('imagenes_sorteos')
+        .upload(filePath, compressedFile);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('imagenes_sorteos').getPublicUrl(filePath);
+      
+      setNewSorteo(prev => ({ ...prev, imagen_url: data.publicUrl }));
+      
+      const originalSize = (file.size / 1024).toFixed(1);
+      const newSize = (compressedFile.size / 1024).toFixed(1);
+      
+      showAlert("Imagen Subida", `Imagen subida y comprimida exitosamente\nDe: ${originalSize}KB ➡️ A: ${newSize}KB`, "success");
+
+    } catch (error) {
+      showAlert("Error Subiendo Imagen", error.message + ". ¿Creaste el bucket 'imagenes_sorteos' en Supabase?", "error");
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleGuardarSorteo = async (e) => {
@@ -121,13 +243,40 @@ export default function AdminPage() {
     try {
       if (editingSorteoId) {
         const { error } = await supabase.from('sorteos').update(newSorteo).eq('id', editingSorteoId);
-        if (error) throw error; alert("Sorteo actualizado.");
+        if (error) throw error; 
+        showAlert("Actualizado", "El sorteo se ha actualizado correctamente.", "success");
       } else {
         const { error } = await supabase.from('sorteos').insert([newSorteo]);
-        if (error) throw error; alert("Sorteo creado.");
+        if (error) throw error; 
+        showAlert("Creado", "El nuevo sorteo ha sido creado con éxito.", "success");
       }
       setShowCreateModal(false); fetchDashboardData();
-    } catch (error) { alert("Error: " + error.message); } finally { setIsSubmitting(false); }
+    } catch (error) { 
+      showAlert("Error al Guardar", error.message, "error"); 
+    } finally { setIsSubmitting(false); }
+  };
+
+  // MODIFICADO: Utilizando Modal de Confirmación Personalizado
+  const reabrirSorteo = (sorteoId, nombreSorteo) => {
+    showConfirm(
+      "Alerta de Seguridad",
+      `Vas a REABRIR el sorteo "${nombreSorteo}". Esto eliminará al ganador actual y pondrá la rifa como 'Activa' nuevamente. ¿Deseas continuar?`,
+      async () => {
+        try {
+          const { error } = await supabase.from('sorteos').update({
+            estado: 'active',
+            ganador_nombre: null,
+            numero_ganador: null
+          }).eq('id', sorteoId);
+          
+          if (error) throw error;
+          showAlert("Sorteo Reabierto", "La rifa ha sido reabierta. Ya puedes girar la ruleta otra vez.", "success");
+          fetchDashboardData();
+        } catch (error) {
+          showAlert("Error", "No se pudo reabrir la rifa: " + error.message, "error");
+        }
+      }
+    );
   };
 
   const openRouletteModal = async (sorteo) => {
@@ -138,7 +287,7 @@ export default function AdminPage() {
       .eq('estado', 'pagado');
 
     if (error || !data || data.length === 0) {
-      alert("No hay boletos con pagos completados para este sorteo.");
+      showAlert("Atención", "No hay boletos con pagos completados para este sorteo.", "warning");
       return;
     }
 
@@ -230,7 +379,6 @@ export default function AdminPage() {
           </form>
         </div>
       </div>
-      
     );
   }
 
@@ -282,6 +430,9 @@ export default function AdminPage() {
                     <td style={{ padding: "1rem" }}>
                       <div style={{ fontWeight: "bold" }}>{p.clientes?.nombre} {p.clientes?.apellidos}</div>
                       <div style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>{p.clientes?.telefono}</div>
+                      <div style={{ fontSize: "0.7rem", color: "var(--accent-gold)" }}>
+                        🎂 {p.clientes?.fecha_nacimiento || "S/D"} | {p.clientes?.es_mayor_edad ? "🔞 Mayor de edad" : "❌ Menor"}
+                      </div>
                     </td>
                     <td style={{ padding: "1rem" }}>{p.sorteos?.nombre}</td>
                     <td style={{ padding: "1rem", fontWeight: "bold", color: "var(--accent-gold)" }}>
@@ -292,15 +443,20 @@ export default function AdminPage() {
                     <td style={{ padding: "1rem", textTransform: "uppercase", fontSize: "0.75rem" }}>{p.metodo_pago}</td>
                     <td style={{ padding: "1rem", fontWeight: "bold", color: "#4BC98A" }}>${p.total_pagar}</td>
                     <td style={{ padding: "1rem" }}>
-                      <span style={{ background: p.estado_pago === 'completado' ? 'rgba(75, 201, 138, 0.2)' : 'rgba(255, 171, 0, 0.2)', color: p.estado_pago === 'completado' ? '#4BC98A' : '#FFAB00', padding: "0.3rem 0.6rem", borderRadius: "100px", fontSize: "0.75rem", fontWeight: "bold" }}>
+                      <span style={{ background: p.estado_pago === 'completado' ? 'rgba(75, 201, 138, 0.2)' : p.estado_pago === 'cancelado' ? 'rgba(255, 68, 68, 0.2)' : 'rgba(255, 171, 0, 0.2)', color: p.estado_pago === 'completado' ? '#4BC98A' : p.estado_pago === 'cancelado' ? '#FF4444' : '#FFAB00', padding: "0.3rem 0.6rem", borderRadius: "100px", fontSize: "0.75rem", fontWeight: "bold" }}>
                         {p.estado_pago}
                       </span>
                     </td>
                     <td style={{ padding: "1rem" }}>
                       {p.estado_pago === 'pendiente' && (
-                        <button onClick={() => aprobarPago(p.id)} style={{ background: "#4BC98A", color: "#1a1a1a", border: "none", padding: "0.5rem 1rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "bold", cursor: "pointer" }}>
-                          Aprobar Pago
-                        </button>
+                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                          <button onClick={() => gestionarPedido(p.id, 'aprobar')} style={{ background: "#4BC98A", color: "#1a1a1a", border: "none", padding: "0.5rem 1rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "bold", cursor: "pointer" }}>
+                            Aprobar
+                          </button>
+                          <button onClick={() => gestionarPedido(p.id, 'rechazar')} style={{ background: "transparent", color: "#FF4444", border: "1px solid #FF4444", padding: "0.5rem 1rem", borderRadius: "6px", fontSize: "0.75rem", fontWeight: "bold", cursor: "pointer" }}>
+                            Rechazar
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
@@ -326,7 +482,9 @@ export default function AdminPage() {
                   <div style={{ position: "absolute", top: "1rem", right: "1rem", width: "15px", height: "15px", borderRadius: "50%", background: s.color }}></div>
                   
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
-                    <span style={{ fontSize: "2.5rem" }}>{s.emoji}</span>
+                    <div style={{ width: "60px", height: "60px", background: "var(--bg-sunken)", borderRadius: "8px", overflow: "hidden" }}>
+                        <img src={s.imagen_url || "/images/sorteos/galapagos-premio.png"} alt={s.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
                     <span style={{ background: "var(--bg-sunken)", padding: "0.3rem 0.8rem", borderRadius: "100px", fontSize: "0.7rem", fontWeight: "bold", textTransform: "uppercase", height: "fit-content" }}>{s.estado}</span>
                   </div>
                   <h3 style={{ margin: "0 0 0.5rem 0", color: "var(--text-primary)" }}>{s.nombre}</h3>
@@ -358,7 +516,9 @@ export default function AdminPage() {
                 <div key={s.id} style={{ background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", borderRadius: "var(--r-lg)", padding: "1.5rem", position: "relative", opacity: 0.9 }}>
                   
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "1rem" }}>
-                    <span style={{ fontSize: "2.5rem", filter: "grayscale(100%)" }}>{s.emoji}</span>
+                    <div style={{ width: "60px", height: "60px", background: "var(--bg-sunken)", borderRadius: "8px", overflow: "hidden", filter: "grayscale(100%)" }}>
+                        <img src={s.imagen_url || "/images/sorteos/galapagos-premio.png"} alt={s.nombre} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    </div>
                     <span style={{ background: "#333", color: "#fff", padding: "0.3rem 0.8rem", borderRadius: "100px", fontSize: "0.7rem", fontWeight: "bold", textTransform: "uppercase", height: "fit-content" }}>FINALIZADO</span>
                   </div>
                   
@@ -372,11 +532,14 @@ export default function AdminPage() {
                     <div style={{ fontSize: "1.2rem", fontWeight: "bold", color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>
                       {s.ganador_nombre || "Desconocido"}
                     </div>
-                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.4rem" }}>
+                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.4rem", marginBottom: "1rem" }}>
                       Boleto de Suerte: <strong style={{ color: "var(--accent-gold)" }}>#{s.numero_ganador || "-"}</strong>
                     </div>
+                    
+                    <button onClick={() => reabrirSorteo(s.id, s.nombre)} style={{ background: "transparent", color: "var(--accent-ruby)", border: "1px solid var(--accent-ruby)", padding: "0.4rem 1rem", borderRadius: "6px", fontSize: "0.8rem", fontWeight: "bold", cursor: "pointer", transition: "all 0.3s" }}>
+                      🔄 Reabrir Rifa (Girar de nuevo)
+                    </button>
                   </div>
-
                 </div>
               ))}
               {sorteos.filter(s => s.estado === 'finished').length === 0 && <p style={{ color: "var(--text-muted)" }}>Aún no hay sorteos finalizados.</p>}
@@ -386,6 +549,7 @@ export default function AdminPage() {
 
       </main>
 
+      {/* MODAL DE RULETA */}
       {showRoulette && rouletteSorteo && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.9)", backdropFilter: "blur(10px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1100, padding: "1rem" }}>
           <div style={{ background: "var(--bg-surface)", borderRadius: "var(--r-xl)", border: "2px solid var(--accent-gold)", width: "100%", maxWidth: "500px", padding: "3rem 2rem", textAlign: "center", position: "relative", boxShadow: "0 0 50px rgba(201,168,76,0.3)" }}>
@@ -400,7 +564,6 @@ export default function AdminPage() {
             <p style={{ color: "var(--text-muted)", marginBottom: "2.5rem" }}>{candidates.length} boletos participando</p>
 
             <div style={{ position: 'relative', width: '280px', height: '280px', margin: '0 auto 2.5rem' }}>
-              
               <div style={{
                 position: 'absolute', top: '-15px', left: '50%', transform: 'translateX(-50%)',
                 width: 0, height: 0, borderLeft: '15px solid transparent', borderRight: '15px solid transparent',
@@ -461,11 +624,11 @@ export default function AdminPage() {
                 {isSpinning ? "Girando..." : "🎰 Tirar de la Ruleta"}
               </button>
             )}
-
           </div>
         </div>
       )}
 
+      {/* MODAL DE CREACIÓN/EDICIÓN */}
       {showCreateModal && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: "1rem" }}>
           <div style={{ background: "var(--bg-surface)", borderRadius: "var(--r-lg)", border: "1px solid var(--accent-gold)", width: "100%", maxWidth: "600px", maxHeight: "90vh", overflowY: "auto", padding: "2rem", boxShadow: "0 10px 40px rgba(201,168,76,0.15)" }}>
@@ -487,6 +650,23 @@ export default function AdminPage() {
                   <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.4rem", color: "var(--text-secondary)" }}>Descripción *</label>
                   <textarea required rows="3" value={newSorteo.descripcion} onChange={e => setNewSorteo({...newSorteo, descripcion: e.target.value})} style={{ width: "100%", padding: "0.6rem", borderRadius: "6px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "#fff", outline: "none", resize: "none" }}></textarea>
                 </div>
+
+                <div style={{ gridColumn: "1 / -1", background: "var(--bg-base)", padding: "1rem", borderRadius: "8px", border: "1px dashed var(--border-mid)" }}>
+                  <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.4rem", color: "var(--text-secondary)", fontWeight: "bold" }}>Imagen del Sorteo *</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                    <div>
+                      <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block", marginBottom: "0.3rem" }}>Opción 1: Subir desde tu PC (se comprimirá auto.)</span>
+                      <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploadingImage} style={{ width: "100%", padding: "0.4rem", fontSize: "0.8rem", color: "var(--text-primary)" }} />
+                      {uploadingImage && <span style={{ fontSize: "0.75rem", color: "var(--accent-gold)" }}>Comprimiendo y subiendo imagen...</span>}
+                    </div>
+                    <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "0.7rem", textTransform: "uppercase" }}>- O -</div>
+                    <div>
+                      <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block", marginBottom: "0.3rem" }}>Opción 2: Pegar enlace (URL)</span>
+                      <input type="text" required placeholder="https://ejemplo.com/imagen.jpg" value={newSorteo.imagen_url} onChange={e => setNewSorteo({...newSorteo, imagen_url: e.target.value})} style={{ width: "100%", padding: "0.6rem", borderRadius: "6px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "#fff", outline: "none" }} />
+                    </div>
+                  </div>
+                </div>
+
                 <div>
                   <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.4rem", color: "var(--text-secondary)" }}>Total de Boletos *</label>
                   <input type="number" min="1" required disabled={editingSorteoId !== null} value={newSorteo.total_boletos} onChange={e => setNewSorteo({...newSorteo, total_boletos: e.target.value})} style={{ width: "100%", padding: "0.6rem", borderRadius: "6px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "#fff", outline: "none", opacity: editingSorteoId ? 0.5 : 1 }} />
@@ -505,10 +685,6 @@ export default function AdminPage() {
                 </div>
                 <div style={{ display: "flex", gap: "1rem", gridColumn: "1 / -1" }}>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.4rem", color: "var(--text-secondary)" }}>Emoji 🎨</label>
-                    <input type="text" maxLength="2" value={newSorteo.emoji} onChange={e => setNewSorteo({...newSorteo, emoji: e.target.value})} style={{ width: "100%", padding: "0.6rem", borderRadius: "6px", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "#fff", outline: "none", textAlign: "center", fontSize: "1.2rem" }} />
-                  </div>
-                  <div style={{ flex: 1 }}>
                     <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.4rem", color: "var(--text-secondary)" }}>Color Base</label>
                     <input type="color" value={newSorteo.color} onChange={e => setNewSorteo({...newSorteo, color: e.target.value})} style={{ width: "100%", height: "42px", padding: "0", borderRadius: "6px", border: "none", cursor: "pointer", background: "transparent" }} />
                   </div>
@@ -524,11 +700,42 @@ export default function AdminPage() {
               </div>
               <div style={{ display: "flex", gap: "1rem", marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)" }}>
                 <button type="button" onClick={() => setShowCreateModal(false)} style={{ flex: 1, padding: "0.8rem", background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-mid)", borderRadius: "6px", cursor: "pointer" }}>Cancelar</button>
-                <button type="submit" disabled={isSubmitting} style={{ flex: 2, padding: "0.8rem", background: "var(--accent-gold)", color: "#1a1a1a", border: "none", borderRadius: "6px", fontWeight: "bold", cursor: isSubmitting ? "not-allowed" : "pointer", opacity: isSubmitting ? 0.7 : 1 }}>
+                <button type="submit" disabled={isSubmitting || uploadingImage} style={{ flex: 2, padding: "0.8rem", background: "var(--accent-gold)", color: "#1a1a1a", border: "none", borderRadius: "6px", fontWeight: "bold", cursor: (isSubmitting || uploadingImage) ? "not-allowed" : "pointer", opacity: (isSubmitting || uploadingImage) ? 0.7 : 1 }}>
                   {isSubmitting ? "Guardando..." : (editingSorteoId ? "Guardar Cambios" : "Crear Sorteo Oficial")}
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* NUEVO: RENDER DEL MODAL DE ALERTAS GLOBALES */}
+      {alertModal.isOpen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: "1rem" }}>
+          <div style={{ background: "var(--bg-surface)", borderRadius: "var(--r-lg)", border: `1px solid ${alertModal.type === 'error' ? 'var(--accent-ruby)' : alertModal.type === 'warning' ? '#FFAB00' : 'var(--accent-gold)'}`, width: "100%", maxWidth: "400px", padding: "2rem", textAlign: "center", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" }}>
+            
+            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>
+              {alertModal.type === 'success' && '✅'}
+              {alertModal.type === 'error' && '❌'}
+              {alertModal.type === 'warning' && '⚠️'}
+              {alertModal.type === 'info' && 'ℹ️'}
+              {alertModal.type === 'confirm' && '❓'}
+            </div>
+
+            <h3 style={{ margin: "0 0 1rem 0", color: "var(--text-primary)", fontFamily: "var(--font-display)" }}>{alertModal.title}</h3>
+            <p style={{ color: "var(--text-secondary)", marginBottom: "2rem", fontSize: "0.9rem", lineHeight: "1.5", whiteSpace: "pre-line" }}>{alertModal.message}</p>
+
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+              {alertModal.type === 'confirm' ? (
+                <>
+                  <button onClick={closeAlert} style={{ flex: 1, padding: "0.8rem", background: "transparent", border: "1px solid var(--border-mid)", color: "var(--text-secondary)", borderRadius: "6px", cursor: "pointer", fontWeight: "bold" }}>Cancelar</button>
+                  <button onClick={() => { alertModal.onConfirm(); closeAlert(); }} style={{ flex: 1, padding: "0.8rem", background: "var(--accent-gold)", border: "none", color: "#1a1a1a", borderRadius: "6px", cursor: "pointer", fontWeight: "bold" }}>Confirmar</button>
+                </>
+              ) : (
+                <button onClick={closeAlert} style={{ width: "100%", padding: "0.8rem", background: "var(--accent-gold)", border: "none", color: "#1a1a1a", borderRadius: "6px", cursor: "pointer", fontWeight: "bold" }}>Aceptar</button>
+              )}
+            </div>
+
           </div>
         </div>
       )}

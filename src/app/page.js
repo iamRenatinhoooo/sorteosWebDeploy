@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-
 /* ══════════════════════════════════════
    HELPERS
 ══════════════════════════════════════ */
@@ -36,6 +35,18 @@ const hexToRgb = (hex) => {
   return "0,0,0";
 };
 
+// NUEVO: Función para calcular la edad exacta basada en la fecha de nacimiento
+const calculateAge = (dobString) => {
+  const dob = new Date(dobString);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  return age;
+};
+
 /* ══════════════════════════════════════
    COMPONENT
 ══════════════════════════════════════ */
@@ -55,8 +66,12 @@ export default function SorteosPage() {
 
   // ESTADO PARA EL FORMULARIO
   const [userData, setUserData] = useState({
-    pais: "", provincia: "", ciudad: "", nombre: "", apellidos: "", telefono: "", email: ""
+    pais: "", provincia: "", ciudad: "", nombre: "", apellidos: "", telefono: "", email: "",
+    fecha_nacimiento: "", es_mayor_edad: false
   });
+  
+  // NUEVO: Estado para manejar el error de minoría de edad
+  const [dobError, setDobError] = useState("");
 
   /* ── Fetch Initial Data ── */
   useEffect(() => {
@@ -122,6 +137,24 @@ export default function SorteosPage() {
     }, 100);
   };
 
+  // NUEVO: Función para manejar el cambio de fecha y validar edad en tiempo real
+  const handleDateChange = (e) => {
+    const dateStr = e.target.value;
+    let isAdult = userData.es_mayor_edad;
+    let error = "";
+
+    if (dateStr) {
+      const age = calculateAge(dateStr);
+      if (age < 18) {
+        error = "Lo sentimos, debes ser mayor de 18 años para participar.";
+        isAdult = false; // Fuerza a desmarcar el checkbox si es menor
+      }
+    }
+
+    setDobError(error);
+    setUserData({ ...userData, fecha_nacimiento: dateStr, es_mayor_edad: isAdult });
+  };
+
   const confirmFinalPurchase = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
@@ -158,7 +191,8 @@ export default function SorteosPage() {
       setModal(tempReservation);
       setShowPayment(false);
       setUserPicks(prev => ({ ...prev, [selected]: new Set() }));
-      setUserData({ pais: "", provincia: "", ciudad: "", nombre: "", apellidos: "", telefono: "", email: "" });
+      setUserData({ pais: "", provincia: "", ciudad: "", nombre: "", apellidos: "", telefono: "", email: "", fecha_nacimiento: "", es_mayor_edad: false });
+      setDobError("");
       setPaymentMethod(null);
 
       if (paymentMethod === 'transfer') {
@@ -172,6 +206,9 @@ export default function SorteosPage() {
       setIsProcessing(false);
     }
   };
+
+  // Validación: Solo es válido si no hay error de fecha, la casilla está marcada y el resto de campos existen
+  const isFormValid = userData.nombre && userData.apellidos && userData.telefono && userData.email && userData.ciudad && userData.fecha_nacimiento && userData.es_mayor_edad && paymentMethod && !dobError;
 
   /* ════════════════════════════════════════════════════════
      RENDER
@@ -193,10 +230,8 @@ export default function SorteosPage() {
       fontFamily: "var(--font-body)",
     }}>
 
-      {/* ══════════ MAIN ══════════ */}
       <main id="sorteos-section" style={{ maxWidth: "960px", margin: "0 auto", padding: "6rem 5% 80px" }}>
 
-        {/* --- TÍTULO PRINCIPAL (HERO) --- */}
         <section style={{ textAlign: "center", marginBottom: "4rem" }}>
           <h1 style={{
             fontFamily: "'Cinzel', serif",
@@ -221,7 +256,6 @@ export default function SorteosPage() {
           </p>
         </section>
 
-        {/* --- ENCABEZADO Y PESTAÑAS DE SORTEOS --- */}
         <section>
           <div style={{ textAlign: "center", marginBottom: "3rem" }}>
             <span style={{ fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.22em", color: "var(--accent-gold)", display: "block", marginBottom: "0.75rem" }}>
@@ -263,7 +297,6 @@ export default function SorteosPage() {
             </div>
           </div>
 
-          {/* ══════════ GRID DE TARJETAS (REDISEÑO COMPLETO) ══════════ */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "2rem", marginBottom: "4rem" }}>
             {filteredPrizes.length > 0 ? (
               filteredPrizes.map((prize) => {
@@ -294,7 +327,6 @@ export default function SorteosPage() {
                       filter: isFinished ? "grayscale(0.5)" : "none",
                     }}
                   >
-                    {/* SECCIÓN 1: IMAGEN Y BADGE FLOTANTE */}
                     <div style={{ position: "relative", width: "100%", height: "200px", background: "var(--bg-sunken)" }}>
                       <img
                         src={prize.imagen_url || "/images/sorteos/galapagos-premio.png"}
@@ -313,7 +345,6 @@ export default function SorteosPage() {
                       </div>
                     </div>
 
-                    {/* SECCIÓN 2: DETALLES PRINCIPALES */}
                     <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem", flex: 1 }}>
                       <div>
                         <h3 style={{ fontFamily: "var(--font-brand)", fontSize: "1.2rem", fontWeight: 700, margin: "0 0 0.5rem", color: "var(--text-primary)" }}>
@@ -331,7 +362,6 @@ export default function SorteosPage() {
                         {prize.descripcion}
                       </p>
 
-                      {/* BARRA DE PROGRESO (RECUPERADA) */}
                       {!isFinished && (
                         <div style={{ marginBottom: "0.5rem" }}>
                           <div style={{ height: "4px", background: "var(--border-subtle)", borderRadius: "100px", overflow: "hidden" }}>
@@ -344,7 +374,6 @@ export default function SorteosPage() {
                         </div>
                       )}
 
-                      {/* INFO BOX: FECHA Y HORA (RECUPERADA) */}
                       <div style={{ background: "var(--bg-sunken)", padding: "0.75rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-subtle)", fontSize: "0.75rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
                           <span style={{ color: "var(--text-muted)" }}>Fecha:</span>
@@ -356,7 +385,6 @@ export default function SorteosPage() {
                         </div>
                       </div>
 
-                      {/* SECCIÓN 3: ESTADO DINÁMICO (CONTADOR O GANADOR) */}
                       <div style={{ marginTop: "auto", paddingTop: "1rem", borderTop: "1px solid var(--border-subtle)" }}>
                         {isFinished ? (
                           <div style={{ textAlign: "center" }}>
@@ -380,7 +408,6 @@ export default function SorteosPage() {
                         )}
                       </div>
 
-                      {/* BOTÓN DE ACCIÓN */}
                       {activeTab === 'active' && (
                         <button
                           onClick={() => {
@@ -410,7 +437,7 @@ export default function SorteosPage() {
             )}
           </div>
         </section>
-        {/* --- PANEL DE SELECCIÓN DE NÚMEROS --- */}
+        
         {activePrize && activeTab === 'active' && (
           <section style={{
             background: "var(--bg-surface)", border: "1px solid var(--border-mid)",
@@ -419,8 +446,10 @@ export default function SorteosPage() {
             animation: "fadeUp 0.5s ease"
           }}>
             <div style={{ marginBottom: "2rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem" }}>
-                <span style={{ fontSize: "1.8rem" }}>{activePrize.emoji}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.75rem" }}>
+                <div style={{ width: "45px", height: "45px", borderRadius: "50%", overflow: "hidden", background: "var(--bg-sunken)", flexShrink: 0 }}>
+                   <img src={activePrize.imagen_url || "/images/sorteos/galapagos-premio.png"} alt="Premio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                </div>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>
                   {activePrize.nombre}
                 </h2>
@@ -492,7 +521,6 @@ export default function SorteosPage() {
           </section>
         )}
 
-        {/* ══════════ SECCIÓN INLINE: FORMULARIO + PAGO ══════════ */}
         {showPayment && tempReservation && (
           <section id="checkout-section" style={{
             background: "var(--bg-surface)", border: "1px solid var(--border-mid)",
@@ -505,12 +533,12 @@ export default function SorteosPage() {
               <div style={{ height: "2px", background: "var(--border-subtle)", marginTop: "0.5rem" }} />
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", marginBottom: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem", marginBottom: "1rem" }}>
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>País *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>País *</label>
                 <select
                   value={userData.pais} onChange={(e) => setUserData({ ...userData, pais: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 >
                   <option value="">Selecciona un país...</option>
                   <option value="Ecuador">Ecuador</option>
@@ -518,10 +546,10 @@ export default function SorteosPage() {
               </div>
 
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Provincia *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Provincia *</label>
                 <select
                   value={userData.provincia} onChange={(e) => setUserData({ ...userData, provincia: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 >
                   <option value="">Elige una opción...</option>
                   <option value="Guayas">Guayas</option>
@@ -529,46 +557,81 @@ export default function SorteosPage() {
               </div>
 
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Ciudad *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Ciudad *</label>
                 <input
                   type="text" value={userData.ciudad} onChange={(e) => setUserData({ ...userData, ciudad: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 />
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Nombre *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Nombre *</label>
                 <input
                   type="text" value={userData.nombre} onChange={(e) => setUserData({ ...userData, nombre: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Apellidos *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Apellidos *</label>
                 <input
                   type="text" value={userData.apellidos} onChange={(e) => setUserData({ ...userData, apellidos: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 />
               </div>
 
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Teléfono *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Teléfono *</label>
                 <input
                   type="tel" value={userData.telefono} onChange={(e) => setUserData({ ...userData, telefono: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 />
               </div>
 
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Correo electrónico *</label>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Correo electrónico *</label>
                 <input
                   type="email" value={userData.email} onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                  style={{ width: "100%", padding: "0.5rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none" }}
                 />
+              </div>
+
+              {/* CAMPO DE FECHA DE NACIMIENTO MODIFICADO */}
+              <div style={{ gridColumn: "1 / -1", marginTop: "0.5rem" }}>
+                <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Fecha de Nacimiento *</label>
+                <input
+                  type="date" value={userData.fecha_nacimiento} onChange={handleDateChange}
+                  style={{ width: "100%", padding: "0.6rem", borderRadius: "var(--r-sm)", background: "var(--bg-sunken)", border: "1px solid var(--border-subtle)", color: "var(--text-primary)", outline: "none", colorScheme: "dark" }}
+                />
+                {dobError && (
+                  <span style={{ color: "var(--accent-ruby)", fontSize: "0.85rem", marginTop: "0.5rem", display: "block", fontWeight: "bold" }}>
+                    ⚠️ {dobError}
+                  </span>
+                )}
+              </div>
+
+              {/* CHECKBOX BLOQUEABLE Y ALERTA VISUAL */}
+              <div style={{ gridColumn: "1 / -1", marginTop: "1rem", background: "var(--bg-elevated)", padding: "1.5rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-mid)", borderLeft: "4px solid var(--accent-ruby)", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "1rem", cursor: (dobError || !userData.fecha_nacimiento) ? "not-allowed" : "pointer", fontSize: "0.95rem", fontWeight: 700, color: (dobError || !userData.fecha_nacimiento) ? "var(--text-muted)" : "var(--text-primary)" }}>
+                  <input
+                    type="checkbox"
+                    checked={userData.es_mayor_edad}
+                    disabled={!!dobError || !userData.fecha_nacimiento}
+                    onChange={(e) => setUserData({ ...userData, es_mayor_edad: e.target.checked })}
+                    style={{ width: "22px", height: "22px", accentColor: "var(--accent-gold)", cursor: (dobError || !userData.fecha_nacimiento) ? "not-allowed" : "pointer" }}
+                  />
+                  Declaro que soy mayor de edad (18+ años) *
+                </label>
+                
+                <div style={{ display: "flex", gap: "0.8rem", marginTop: "1rem", alignItems: "flex-start" }}>
+                  <span style={{ fontSize: "1.2rem" }}>⚠️</span>
+                  <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-secondary)", fontStyle: "italic", lineHeight: "1.5" }}>
+                    <strong>Aviso importante:</strong> En caso de comprobarse que NO es mayor de edad en la verificación del ganador, se procederá a anular el número de boleto automáticamente y no existirá devolución del dinero.
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div style={{ marginBottom: "2rem" }}>
+            <div style={{ marginBottom: "2rem", marginTop: "3rem" }}>
               <h2 style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", margin: 0 }}>MÉTODO DE PAGO</h2>
               <div style={{ height: "1px", background: "var(--border-subtle)", marginTop: "1rem" }} />
             </div>
@@ -581,17 +644,17 @@ export default function SorteosPage() {
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                <button onClick={() => setPaymentMethod('payphone')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'payphone' ? "2px solid #ff6b00" : "1px solid var(--border-mid)", background: "white", cursor: "pointer" }}>
+                <button onClick={() => setPaymentMethod('payphone')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'payphone' ? "2px solid #ff6b00" : "1px solid var(--border-mid)", background: "white", cursor: "pointer", transition: "all 0.2s" }}>
                   <img src="https://www.payphone.app/wp-content/uploads/2021/05/logo-payphone.png" alt="Payphone" style={{ height: "20px" }} />
                   <span style={{ fontWeight: 700, color: "#1a1a1a", fontSize: "0.9rem" }}>PayPhone</span>
                 </button>
 
-                <button onClick={() => setPaymentMethod('paypal')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'paypal' ? "2px solid #003087" : "1px solid var(--border-mid)", background: "white", cursor: "pointer" }}>
+                <button onClick={() => setPaymentMethod('paypal')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'paypal' ? "2px solid #003087" : "1px solid var(--border-mid)", background: "white", cursor: "pointer", transition: "all 0.2s" }}>
                   <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style={{ height: "20px" }} />
                   <span style={{ fontWeight: 700, color: "#1a1a1a", fontSize: "0.9rem" }}>PayPal / Tarjeta</span>
                 </button>
 
-                <button onClick={() => setPaymentMethod('transfer')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'transfer' ? "2px solid var(--accent-gold)" : "1px solid var(--border-mid)", background: "var(--bg-sunken)", cursor: "pointer", color: "var(--text-primary)" }}>
+                <button onClick={() => setPaymentMethod('transfer')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'transfer' ? "2px solid var(--accent-gold)" : "1px solid var(--border-mid)", background: "var(--bg-sunken)", cursor: "pointer", color: "var(--text-primary)", transition: "all 0.2s" }}>
                   <span style={{ fontSize: "1.2rem" }}>🏦</span>
                   <div style={{ textAlign: "left" }}>
                     <div style={{ fontWeight: 700, fontSize: "0.9rem" }}>Transferencia</div>
@@ -625,21 +688,20 @@ export default function SorteosPage() {
               </button>
 
               <button
-                disabled={isProcessing || !paymentMethod || !userData.nombre || !userData.apellidos || !userData.telefono || !userData.email}
+                disabled={isProcessing || !isFormValid}
                 onClick={confirmFinalPurchase}
                 style={{
                   flex: 2, minWidth: "200px", padding: "1rem", borderRadius: "var(--r-sm)", border: "none",
-                  background: (!paymentMethod || !userData.nombre || !userData.apellidos || !userData.telefono || !userData.email) ? "var(--bg-sunken)" : "var(--accent-gold)",
-                  color: (!paymentMethod || !userData.nombre || !userData.apellidos || !userData.telefono || !userData.email) ? "var(--text-muted)" : "#1a1a1a",
-                  fontWeight: 700, cursor: (!paymentMethod || !userData.nombre || !userData.apellidos || !userData.telefono || !userData.email) ? "not-allowed" : "pointer",
+                  background: (!isFormValid) ? "var(--bg-sunken)" : "var(--accent-gold)",
+                  color: (!isFormValid) ? "var(--text-muted)" : "#1a1a1a",
+                  fontWeight: 700, cursor: (!isFormValid) ? "not-allowed" : "pointer",
                   transition: "all 0.3s",
                   opacity: isProcessing ? 0.7 : 1
                 }}
               >
                 {isProcessing ? "Procesando..." :
-                  !paymentMethod ? "Selecciona un método de pago" :
-                    (!userData.nombre || !userData.email) ? "Completa tus datos arriba" :
-                      paymentMethod === 'transfer' ? "Confirmar y enviar a WhatsApp 📱" : "Proceder al Pago Seguro"}
+                  !isFormValid ? (dobError ? "Debes ser mayor de 18 años para comprar" : "Completa todos los datos y acepta los términos") :
+                    paymentMethod === 'transfer' ? "Confirmar y enviar a WhatsApp 📱" : "Proceder al Pago Seguro"}
               </button>
             </div>
           </section>
@@ -647,7 +709,6 @@ export default function SorteosPage() {
 
       </main>
 
-      {/* ══════════ MODAL SUCCESS ══════════ */}
       {modal && (
         <div
           onClick={() => setModal(null)}
