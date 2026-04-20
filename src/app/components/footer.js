@@ -39,17 +39,17 @@ export default function Footer() {
           <h4 style={{ fontSize: "0.7rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "1.25rem" }}>Información Legal</h4>
           <ul style={{ listStyle: "none", padding: 0, fontSize: "0.85rem", color: "var(--text-muted)", lineHeight: "2.2" }}>
             <li>
-              <Link href="/legal/terminos" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
+              <Link href="/page/terminos" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
                 Términos y Condiciones
               </Link>
             </li>
             <li>
-              <Link href="/legal/privacidad" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
+              <Link href="/page/privacidad" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
                 Política de Privacidad
               </Link>
             </li>
             <li>
-              <Link href="/legal/datos-personales" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
+              <Link href="/page/datos-personales" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
                 Tratamiento de Datos Personales
               </Link>
             </li>
