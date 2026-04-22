@@ -26,30 +26,15 @@ export default function PoliticaPrivacidad() {
   ];
 
   return (
-    <main style={{
-      minHeight: "100vh",
+    <main className="main-privacy" style={{
       background: "var(--bg-sunken)",
-      padding: "120px 5% 4rem",
       color: "var(--text-muted)",
       fontFamily: "system-ui, -apple-system, sans-serif"
     }}>
-      <div style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "4rem",
-        position: "relative"
-      }}>
+      <div className="privacy-layout">
         
         {/* ══════════ ÍNDICE (SIDEBAR) ══════════ */}
-        <aside style={{
-          flex: "1 1 250px",
-          maxWidth: "300px",
-          position: "sticky",
-          top: "120px",
-          height: "fit-content",
-        }}>
+        <aside className="privacy-sidebar">
           <Link href="/" style={{
             display: "inline-flex",
             alignItems: "center",
@@ -58,7 +43,7 @@ export default function PoliticaPrivacidad() {
             textDecoration: "none",
             fontSize: "0.9rem",
             fontWeight: 600,
-            marginBottom: "2rem",
+            marginBottom: "1.5rem",
             transition: "opacity 0.3s"
           }}
           onMouseEnter={(e) => e.currentTarget.style.opacity = "0.7"}
@@ -67,26 +52,22 @@ export default function PoliticaPrivacidad() {
             <span>←</span> Volver al Inicio
           </Link>
 
-          <h3 style={{
+          <h3 className="sidebar-title" style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: "1.1rem",
             color: "var(--accent-gold)",
-            marginBottom: "1.5rem",
             borderBottom: "1px solid var(--border-mid)",
             paddingBottom: "0.5rem"
           }}>
             Privacidad LOPDP
           </h3>
           
-          <nav style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+          <nav className="sidebar-nav">
             {secciones.map((seccion) => (
               <a 
                 key={seccion.id} 
                 href={`#${seccion.id}`}
+                className="nav-link"
                 style={{
-                  color: "var(--text-muted)",
-                  textDecoration: "none",
-                  fontSize: "0.85rem",
                   transition: "color 0.3s",
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent-ruby)"}
@@ -99,11 +80,8 @@ export default function PoliticaPrivacidad() {
         </aside>
 
         {/* ══════════ CONTENIDO ══════════ */}
-        <section style={{
-          flex: "3 1 600px",
+        <section className="privacy-content" style={{
           background: "var(--nav-bg)",
-          padding: "3rem",
-          borderRadius: "12px",
           border: "1px solid var(--border-mid)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
         }}>
@@ -111,9 +89,10 @@ export default function PoliticaPrivacidad() {
           <div style={{ marginBottom: "3rem" }}>
             <h1 style={{
               fontFamily: "'Cinzel', serif",
-              fontSize: "2.2rem",
+              fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
               color: "var(--accent-gold)",
-              marginBottom: "0.5rem"
+              marginBottom: "0.5rem",
+              lineHeight: 1.2
             }}>
               Política de Privacidad
             </h1>
@@ -122,15 +101,15 @@ export default function PoliticaPrivacidad() {
             </p>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem", lineHeight: "1.8" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem", lineHeight: "1.8", fontSize: "0.95rem" }}>
             
             {/* Tabla de Derechos */}
-            <article id="resumen" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1.5rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="resumen" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1.5rem", fontFamily: "'Cinzel', serif" }}>
                 Tabla Resumen de Derechos (ARCO+)
               </h2>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.9rem", border: "1px solid var(--border-mid)" }}>
+              <div style={{ overflowX: "auto", borderRadius: "8px" }}>
+                <table style={{ width: "100%", minWidth: "500px", borderCollapse: "collapse", fontSize: "0.9rem", border: "1px solid var(--border-mid)" }}>
                   <thead>
                     <tr style={{ background: "var(--bg-sunken)", color: "var(--accent-gold)" }}>
                       <th style={{ padding: "12px", border: "1px solid var(--border-mid)", textAlign: "left" }}>Derecho</th>
@@ -155,35 +134,35 @@ export default function PoliticaPrivacidad() {
               </div>
             </article>
 
-            <article id="responsable" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="responsable" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 1. Responsable del Tratamiento
               </h2>
               <p>
                 Sorteos La Fortuna, con domicilio legal en la ciudad de Guayaquil, actúa como Responsable del Tratamiento de sus datos personales conforme a la LOPDP.
               </p>
               <div style={{ marginTop: "1rem", padding: "1rem", background: "var(--bg-sunken)", borderRadius: "8px", borderLeft: "4px solid var(--accent-ruby)" }}>
-                <p style={{ fontSize: "0.9rem" }}><strong>Contacto DPO:</strong> dpo@sorteoslafortuna.ec | +593 9 6326-7270</p>
+                <p style={{ fontSize: "0.9rem", margin: 0 }}><strong>Contacto DPO:</strong> dpo@sorteoslafortuna.ec | +593 9 6326-7270</p>
               </div>
             </article>
 
-            <article id="datos" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="datos" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 2. Datos que Recopilamos
               </h2>
-              <ul style={{ paddingLeft: "1.2rem" }}>
+              <ul style={{ paddingLeft: "1.2rem", margin: 0 }}>
                 <li>Identificativos: Nombre completo y número de cédula/pasaporte.</li>
                 <li>Contacto: Correo electrónico y teléfono móvil.</li>
                 <li>Transaccionales: Referencias de transferencias y confirmaciones de pago.</li>
                 <li>Técnicos: Dirección IP y cookies de navegación.</li>
               </ul>
-              <p style={{ fontSize: "0.85rem", marginTop: "1rem", fontStyle: "italic" }}>
+              <p style={{ fontSize: "0.85rem", marginTop: "1rem", fontStyle: "italic", marginBottom: 0 }}>
                 * No almacenamos datos de tarjetas de crédito; el procesamiento es externo y seguro.
               </p>
             </article>
 
-            <article id="finalidad" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="finalidad" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 3. Finalidad del Tratamiento
               </h2>
               <p>
@@ -191,8 +170,8 @@ export default function PoliticaPrivacidad() {
               </p>
             </article>
 
-            <article id="terceros" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="terceros" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 6. Compartición con Terceros
               </h2>
               <p>
@@ -200,8 +179,8 @@ export default function PoliticaPrivacidad() {
               </p>
             </article>
 
-            <article id="seguridad" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="seguridad" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 8. Medidas de Seguridad
               </h2>
               <p>
@@ -209,8 +188,8 @@ export default function PoliticaPrivacidad() {
               </p>
             </article>
 
-            <article id="cookies" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="cookies" className="privacy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 9. Política de Cookies
               </h2>
               <p>
@@ -222,10 +201,128 @@ export default function PoliticaPrivacidad() {
 
           {/* Pie de la página legal */}
           <div style={{ marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid var(--border-mid)", fontSize: "0.8rem", opacity: 0.6 }}>
-            <p>Versión: v1.0 | Fecha: Enero 2026 | Sorteos La Fortuna - Guayaquil, Ecuador</p>
+            <p style={{ margin: 0 }}>Versión: v1.0 | Fecha: Enero 2026 | Sorteos La Fortuna - Guayaquil, Ecuador</p>
           </div>
         </section>
       </div>
+
+      <style>{`
+        /* --- ESTILOS BASE (MÓVIL PRIMERO) --- */
+        .main-privacy {
+          min-height: 100vh;
+          padding: 100px 1.5rem 3rem; /* Menos padding en móvil */
+        }
+
+        .privacy-layout {
+          max-width: 1100px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column; /* Apila los elementos en celular */
+          gap: 2rem;
+          position: relative;
+        }
+
+        .privacy-sidebar {
+          width: 100%;
+          position: relative; 
+          top: 0;
+        }
+
+        .sidebar-title {
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
+        }
+
+        /* En móvil, el índice se vuelve un carrusel horizontal */
+        .sidebar-nav {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          overflow-x: auto;
+          padding-bottom: 0.5rem;
+          scrollbar-width: thin; /* Firefox */
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-thumb {
+          background: var(--border-mid);
+          border-radius: 4px;
+        }
+
+        .nav-link {
+          white-space: nowrap; /* Evita saltos de línea en el enlace */
+          background: var(--bg-surface);
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          border: 1px solid var(--border-subtle);
+          color: var(--text-muted);
+          text-decoration: none;
+          font-size: 0.85rem;
+        }
+
+        .privacy-content {
+          padding: 1.5rem; /* Menos padding interno en celular */
+          border-radius: 12px;
+          overflow: hidden; /* Evita que la tabla rompa el diseño si es muy grande */
+        }
+
+        /* Ajuste para que el scroll respete el header superior */
+        .privacy-article {
+          scroll-margin-top: 100px; 
+        }
+
+        /* --- MEDIA QUERIES (TABLET Y PC) --- */
+        @media (min-width: 768px) {
+          .main-privacy {
+            padding: 120px 5% 4rem;
+          }
+
+          .privacy-layout {
+            flex-direction: row; /* Diseño original lado a lado */
+            gap: 4rem;
+          }
+
+          .privacy-sidebar {
+            flex: 1 1 250px;
+            max-width: 300px;
+            position: sticky; /* Vuelve a ser fijo al hacer scroll */
+            top: 120px; 
+            height: fit-content;
+          }
+
+          .sidebar-title {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+          }
+
+          /* El índice vuelve a ser una lista vertical */
+          .sidebar-nav {
+            flex-direction: column;
+            overflow-x: visible;
+            gap: 0.8rem;
+          }
+
+          .nav-link {
+            white-space: normal;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+          }
+
+          .privacy-content {
+            flex: 3 1 600px;
+            padding: 3rem; /* Padding amplio original */
+          }
+
+          .privacy-article {
+            scroll-margin-top: 120px;
+          }
+        }
+      `}</style>
     </main>
   );
 }

@@ -26,7 +26,7 @@ export default function Footer() {
         <div>
           <h4 style={{ fontSize: "0.7rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "1.25rem" }}>Métodos de Pago</h4>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-            {["💳 Visa", "💳 Mastercard", "🏦 Transferencia", "📱 Deuna!"].map((m) => (
+            {["🏦 Transferencia"].map((m) => (
               <span key={m} style={{ background: "var(--chip-bg)", border: "1px solid var(--border-subtle)", padding: "0.35rem 0.75rem", borderRadius: "4px", fontSize: "0.7rem" }}>
                 {m}
               </span>

@@ -98,7 +98,7 @@
 /* ── NIGHT THEME (dark / deep navy) ── */
 [data-theme="night"] {
   --bg-base:     #07101E;
-  --bg-surface:  #0D1B2E;
+  --bg-surface:  #102441;
   --bg-elevated: #142038;
   --bg-sunken:   #050D18;
   --bg-overlay:  rgba(7, 16, 30, 0.97);
@@ -109,7 +109,7 @@
 
   --text-primary:   #F0EAD8;
   --text-secondary: #B8A880;
-  --text-muted:     #7A6A50;
+  --text-muted:     #e9e3d9;
   --text-inverse:   #07101E;
 
   --accent-gold: var(--gold-300);

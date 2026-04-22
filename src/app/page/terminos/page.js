@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 export default function TerminosYCondiciones() {
-  // Opcional: Habilitar scroll suave para toda la página al montar este componente
+  // Habilitar scroll suave para toda la página al montar este componente
   useEffect(() => {
     document.documentElement.style.scrollBehavior = "smooth";
     return () => {
@@ -22,30 +22,15 @@ export default function TerminosYCondiciones() {
   ];
 
   return (
-    <main style={{
-      minHeight: "100vh",
-      background: "var(--bg-sunken)", // Fondo general
-      padding: "120px 5% 4rem", // 120px de padding top para que no lo tape el header fijo de 90px
+    <main className="main-terms" style={{
+      background: "var(--bg-sunken)",
       color: "var(--text-muted)",
       fontFamily: "system-ui, -apple-system, sans-serif"
     }}>
-      <div style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "4rem",
-        position: "relative"
-      }}>
+      <div className="terms-layout">
         
-        {/* ══════════ ÍNDICE (SIDEBAR IZQUIERDA) ══════════ */}
-        <aside style={{
-          flex: "1 1 250px",
-          maxWidth: "300px",
-          position: "sticky",
-          top: "120px", // Se queda pegado al hacer scroll, respetando el header
-          height: "fit-content",
-        }}>
+        {/* ══════════ ÍNDICE (SIDEBAR) ══════════ */}
+        <aside className="terms-sidebar">
           {/* Botón de regreso a Inicio */}
           <Link href="/" style={{
             display: "inline-flex",
@@ -55,7 +40,7 @@ export default function TerminosYCondiciones() {
             textDecoration: "none",
             fontSize: "0.9rem",
             fontWeight: 600,
-            marginBottom: "2rem",
+            marginBottom: "1.5rem",
             transition: "opacity 0.3s"
           }}
           onMouseEnter={(e) => e.currentTarget.style.opacity = "0.7"}
@@ -64,22 +49,21 @@ export default function TerminosYCondiciones() {
             <span>←</span> Volver al Inicio
           </Link>
 
-          <h3 style={{
+          <h3 className="sidebar-title" style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: "1.2rem",
             color: "var(--accent-gold)",
-            marginBottom: "1.5rem",
             borderBottom: "1px solid var(--border-mid)",
             paddingBottom: "0.5rem"
           }}>
             Contenido
           </h3>
           
-          <nav style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+          <nav className="sidebar-nav">
             {secciones.map((seccion) => (
               <a 
                 key={seccion.id} 
                 href={`#${seccion.id}`}
+                className="nav-link"
                 style={{
                   color: "var(--text-muted)",
                   textDecoration: "none",
@@ -96,33 +80,29 @@ export default function TerminosYCondiciones() {
           </nav>
         </aside>
 
-        {/* ══════════ CONTENIDO DE TÉRMINOS (DERECHA) ══════════ */}
-        <section style={{
-          flex: "3 1 600px",
-          background: "var(--nav-bg)", // Usa el fondo de las tarjetas/nav para resaltar sobre el fondo hundido
-          padding: "3rem",
-          borderRadius: "12px",
+        {/* ══════════ CONTENIDO DE TÉRMINOS ══════════ */}
+        <section className="terms-content" style={{
+          background: "var(--nav-bg)",
           border: "1px solid var(--border-mid)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.05)"
         }}>
           
-          <div style={{ marginBottom: "3rem" }}>
+          <div style={{ marginBottom: "2.5rem" }}>
             <h1 style={{
               fontFamily: "'Cinzel', serif",
-              fontSize: "2.5rem",
+              fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
               color: "var(--accent-gold)",
               marginBottom: "0.5rem",
               lineHeight: 1.2
             }}>
               Términos y Condiciones
             </h1>
-
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem", lineHeight: "1.8", fontSize: "0.95rem" }}>
             
-            <article id="aceptacion" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="aceptacion" className="term-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 1. Aceptación de los Términos
               </h2>
               <p style={{ marginBottom: "1rem" }}>
@@ -133,8 +113,8 @@ export default function TerminosYCondiciones() {
               </p>
             </article>
 
-            <article id="requisitos" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="requisitos" className="term-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 2. Requisitos de Participación
               </h2>
               <p style={{ marginBottom: "1rem" }}>
@@ -145,8 +125,8 @@ export default function TerminosYCondiciones() {
               </p>
             </article>
 
-            <article id="adquisicion" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="adquisicion" className="term-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 3. Adquisición de Boletos
               </h2>
               <p style={{ marginBottom: "1rem" }}>
@@ -160,8 +140,8 @@ export default function TerminosYCondiciones() {
               </p>
             </article>
 
-            <article id="realizacion" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="realizacion" className="term-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 4. Realización del Sorteo
               </h2>
               <p style={{ marginBottom: "1rem" }}>
@@ -175,8 +155,8 @@ export default function TerminosYCondiciones() {
               </p>
             </article>
 
-            <article id="entrega" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="entrega" className="term-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 5. Entrega de Premios
               </h2>
               <p style={{ marginBottom: "1rem" }}>
@@ -190,8 +170,8 @@ export default function TerminosYCondiciones() {
               </p>
             </article>
 
-            <article id="ley-aplicable" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="ley-aplicable" className="term-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 6. Ley Aplicable y Jurisdicción
               </h2>
               <p style={{ marginBottom: "1rem" }}>
@@ -205,6 +185,121 @@ export default function TerminosYCondiciones() {
           </div>
         </section>
       </div>
+
+      <style>{`
+        /* --- ESTILOS BASE (MÓVIL PRIMERO) --- */
+        .main-terms {
+          min-height: 100vh;
+          padding: 100px 1.5rem 3rem; /* Menos padding en móvil */
+        }
+
+        .terms-layout {
+          max-width: 1100px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column; /* Apila los elementos en celular */
+          gap: 2rem;
+          position: relative;
+        }
+
+        .terms-sidebar {
+          width: 100%;
+          /* En móvil no queremos que sea sticky para que no tape la lectura */
+          position: relative; 
+          top: 0;
+        }
+
+        .sidebar-title {
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
+        }
+
+        /* En móvil, el índice se vuelve un carrusel horizontal para ahorrar espacio */
+        .sidebar-nav {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          overflow-x: auto;
+          padding-bottom: 0.5rem;
+          scrollbar-width: thin; /* Firefox */
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-thumb {
+          background: var(--border-mid);
+          border-radius: 4px;
+        }
+
+        .nav-link {
+          white-space: nowrap; /* Evita que el texto del enlace salte de línea */
+          background: var(--bg-surface);
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          border: 1px solid var(--border-subtle);
+        }
+
+        .terms-content {
+          padding: 1.5rem; /* Menos padding interno en móvil */
+          border-radius: 12px;
+        }
+
+        /* Ajuste para que al hacer clic en el índice, el título no quede escondido detrás del header */
+        .term-article {
+          scroll-margin-top: 100px; 
+        }
+
+        /* --- MEDIA QUERIES (TABLET Y PC) --- */
+        @media (min-width: 768px) {
+          .main-terms {
+            padding: 120px 5% 4rem;
+          }
+
+          .terms-layout {
+            flex-direction: row; /* Diseño original lado a lado */
+            gap: 4rem;
+          }
+
+          .terms-sidebar {
+            flex: 1 1 250px;
+            max-width: 300px;
+            position: sticky; /* Vuelve a ser fijo al hacer scroll */
+            top: 120px; 
+            height: fit-content;
+          }
+
+          .sidebar-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+          }
+
+          /* El índice vuelve a ser una lista vertical */
+          .sidebar-nav {
+            flex-direction: column;
+            overflow-x: visible;
+            gap: 0.8rem;
+          }
+
+          .nav-link {
+            white-space: normal;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+          }
+
+          .terms-content {
+            flex: 3 1 600px;
+            padding: 3rem; /* Padding amplio original */
+          }
+
+          .term-article {
+            scroll-margin-top: 120px;
+          }
+        }
+      `}</style>
     </main>
   );
 }

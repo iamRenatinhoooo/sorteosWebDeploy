@@ -27,30 +27,15 @@ export default function TratamientoDatosPersonales() {
   ];
 
   return (
-    <main style={{
-      minHeight: "100vh",
+    <main className="main-data-policy" style={{
       background: "var(--bg-sunken)",
-      padding: "120px 5% 4rem",
       color: "var(--text-muted)",
       fontFamily: "system-ui, -apple-system, sans-serif"
     }}>
-      <div style={{
-        maxWidth: "1100px",
-        margin: "0 auto",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "4rem",
-        position: "relative"
-      }}>
+      <div className="policy-layout">
         
         {/* ══════════ ÍNDICE (SIDEBAR) ══════════ */}
-        <aside style={{
-          flex: "1 1 250px",
-          maxWidth: "300px",
-          position: "sticky",
-          top: "120px",
-          height: "fit-content",
-        }}>
+        <aside className="policy-sidebar">
           <Link href="/" style={{
             display: "inline-flex",
             alignItems: "center",
@@ -59,7 +44,7 @@ export default function TratamientoDatosPersonales() {
             textDecoration: "none",
             fontSize: "0.9rem",
             fontWeight: 600,
-            marginBottom: "2rem",
+            marginBottom: "1.5rem",
             transition: "opacity 0.3s"
           }}
           onMouseEnter={(e) => e.currentTarget.style.opacity = "0.7"}
@@ -68,26 +53,22 @@ export default function TratamientoDatosPersonales() {
             <span>←</span> Volver al Inicio
           </Link>
 
-          <h3 style={{
+          <h3 className="sidebar-title" style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: "1.1rem",
             color: "var(--accent-gold)",
-            marginBottom: "1.5rem",
             borderBottom: "1px solid var(--border-mid)",
             paddingBottom: "0.5rem"
           }}>
             Documento Técnico
           </h3>
           
-          <nav style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+          <nav className="sidebar-nav">
             {secciones.map((seccion) => (
               <a 
                 key={seccion.id} 
                 href={`#${seccion.id}`}
+                className="nav-link"
                 style={{
-                  color: "var(--text-muted)",
-                  textDecoration: "none",
-                  fontSize: "0.85rem",
                   transition: "color 0.3s",
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent-ruby)"}
@@ -100,11 +81,8 @@ export default function TratamientoDatosPersonales() {
         </aside>
 
         {/* ══════════ CONTENIDO ══════════ */}
-        <section style={{
-          flex: "3 1 600px",
+        <section className="policy-content" style={{
           background: "var(--nav-bg)",
-          padding: "3rem",
-          borderRadius: "12px",
           border: "1px solid var(--border-mid)",
           boxShadow: "0 4px 20px rgba(0,0,0,0.1)"
         }}>
@@ -112,25 +90,25 @@ export default function TratamientoDatosPersonales() {
           <div style={{ marginBottom: "3rem" }}>
             <h1 style={{
               fontFamily: "'Cinzel', serif",
-              fontSize: "2.2rem",
+              fontSize: "clamp(1.8rem, 5vw, 2.5rem)",
               color: "var(--accent-gold)",
               marginBottom: "0.5rem",
               lineHeight: 1.2
             }}>
               Política de Tratamiento de Datos Personales
             </h1>
-            <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginTop: "1rem" }}>
-              <span style={{ fontSize: "0.75rem", background: "var(--chip-bg)", padding: "0.3rem 0.6rem", borderRadius: "4px", border: "1px solid var(--border-subtle)" }}>
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginTop: "1rem", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "0.75rem", background: "var(--chip-bg)", padding: "0.3rem 0.6rem", borderRadius: "4px", border: "1px solid var(--border-subtle)", whiteSpace: "nowrap" }}>
                 DOCUMENTO TÉCNICO JURÍDICO
               </span>
-              <span style={{ fontSize: "0.85rem", opacity: 0.7 }}>Versión: 1.0 | Enero 2026</span>
+              <span style={{ fontSize: "0.85rem", opacity: 0.7, whiteSpace: "nowrap" }}>Versión: 1.0 | Enero 2026</span>
             </div>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem", lineHeight: "1.8", fontSize: "0.95rem" }}>
             
-            <article id="marco" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="marco" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 1. Marco Normativo
               </h2>
               <p>
@@ -141,8 +119,8 @@ export default function TratamientoDatosPersonales() {
               </p>
             </article>
 
-            <article id="responsable" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="responsable" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 2. Responsable y Delegado de Protección de Datos (DPO)
               </h2>
               <p>
@@ -153,8 +131,8 @@ export default function TratamientoDatosPersonales() {
               </div>
             </article>
 
-            <article id="titulares" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="titulares" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 3. Categorías de Titulares
               </h2>
               <p>Esta política aplica a los siguientes grupos:</p>
@@ -166,13 +144,12 @@ export default function TratamientoDatosPersonales() {
               </ul>
             </article>
 
-            <article id="datos" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="datos" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 4. Categorías de Datos Tratados
               </h2>
               <h3 style={{ fontSize: "1rem", color: "var(--text-muted)", fontWeight: 600, marginTop: "1rem" }}>A. Datos Ordinarios:</h3>
               <p>Incluyen información de identificación (nombres, cédula), datos de contacto (correo, teléfono) y datos transaccionales de pago.</p>
-
 
               <div style={{ marginTop: "1.5rem", padding: "1rem", background: "rgba(220, 38, 38, 0.05)", borderRadius: "8px", border: "1px solid rgba(220, 38, 38, 0.2)" }}>
                 <strong style={{ color: "var(--accent-ruby)" }}>Declaración Oficial:</strong>
@@ -180,8 +157,8 @@ export default function TratamientoDatosPersonales() {
               </div>
             </article>
 
-            <article id="principios" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="principios" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 5. Principios Rectores (Art. 10 LOPDP)
               </h2>
               <p>Nos regimos por los siguientes principios:</p>
@@ -202,8 +179,8 @@ export default function TratamientoDatosPersonales() {
               </p>
             </article>
 
-            <article id="bases" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="bases" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 6. Bases de Legitimación
               </h2>
               <p>El tratamiento de datos se fundamenta en:</p>
@@ -215,8 +192,8 @@ export default function TratamientoDatosPersonales() {
               </ol>
             </article>
 
-            <article id="derechos" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="derechos" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 7. Derechos del Titular (ARCO+)
               </h2>
               <p>Usted dispone de los siguientes derechos:</p>
@@ -232,8 +209,8 @@ export default function TratamientoDatosPersonales() {
               </p>
             </article>
 
-            <article id="ejercicio" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="ejercicio" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 8. Ejercicio de Derechos
               </h2>
               <p>
@@ -250,8 +227,8 @@ export default function TratamientoDatosPersonales() {
               </p>
             </article>
 
-            <article id="transferencias" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="transferencias" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 9. Transferencias Internacionales
               </h2>
               <p>
@@ -259,8 +236,8 @@ export default function TratamientoDatosPersonales() {
               </p>
             </article>
 
-            <article id="seguridad" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="seguridad" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 10. Medidas de Seguridad Implementadas
               </h2>
               <p>Aplicamos las siguientes medidas técnicas y organizativas:</p>
@@ -276,8 +253,8 @@ export default function TratamientoDatosPersonales() {
               </p>
             </article>
 
-            <article id="vigencia" style={{ scrollMarginTop: "120px" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+            <article id="vigencia" className="policy-article">
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 11. Vigencia y Actualización
               </h2>
               <p>
@@ -286,8 +263,8 @@ export default function TratamientoDatosPersonales() {
             </article>
 
             {/* GLOSARIO TÉCNICO */}
-            <article id="glosario" style={{ scrollMarginTop: "120px", marginTop: "2rem" }}>
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "1.3rem", marginBottom: "1.5rem", fontFamily: "'Cinzel', serif", borderBottom: "1px solid var(--border-mid)", paddingBottom: "0.5rem" }}>
+            <article id="glosario" className="policy-article" style={{ marginTop: "2rem" }}>
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1.5rem", fontFamily: "'Cinzel', serif", borderBottom: "1px solid var(--border-mid)", paddingBottom: "0.5rem" }}>
                 Glosario Técnico
               </h2>
               <div style={{ background: "var(--bg-sunken)", padding: "1.5rem", borderRadius: "8px", border: "1px solid var(--border-mid)", fontFamily: "monospace", fontSize: "0.85rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -303,6 +280,124 @@ export default function TratamientoDatosPersonales() {
           </div>
         </section>
       </div>
+
+      <style>{`
+        /* --- ESTILOS BASE (MÓVIL PRIMERO) --- */
+        .main-data-policy {
+          min-height: 100vh;
+          padding: 100px 1.5rem 3rem; /* Menos padding en móvil */
+        }
+
+        .policy-layout {
+          max-width: 1100px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column; /* Apila los elementos en celular */
+          gap: 2rem;
+          position: relative;
+        }
+
+        .policy-sidebar {
+          width: 100%;
+          position: relative; 
+          top: 0;
+        }
+
+        .sidebar-title {
+          font-size: 1.1rem;
+          margin-bottom: 1rem;
+        }
+
+        /* En móvil, el índice se vuelve un carrusel horizontal */
+        .sidebar-nav {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          overflow-x: auto;
+          padding-bottom: 0.5rem;
+          scrollbar-width: thin; /* Firefox */
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar-thumb {
+          background: var(--border-mid);
+          border-radius: 4px;
+        }
+
+        .nav-link {
+          white-space: nowrap; /* Evita saltos de línea en el enlace */
+          background: var(--bg-surface);
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          border: 1px solid var(--border-subtle);
+          color: var(--text-muted);
+          text-decoration: none;
+          font-size: 0.85rem;
+        }
+
+        .policy-content {
+          padding: 1.5rem; /* Menos padding interno en celular */
+          border-radius: 12px;
+          overflow: hidden; 
+        }
+
+        /* Ajuste para que el scroll respete el header superior */
+        .policy-article {
+          scroll-margin-top: 100px; 
+        }
+
+        /* --- MEDIA QUERIES (TABLET Y PC) --- */
+        @media (min-width: 768px) {
+          .main-data-policy {
+            padding: 120px 5% 4rem;
+          }
+
+          .policy-layout {
+            flex-direction: row; /* Diseño original lado a lado */
+            gap: 4rem;
+          }
+
+          .policy-sidebar {
+            flex: 1 1 250px;
+            max-width: 300px;
+            position: sticky; /* Vuelve a ser fijo al hacer scroll */
+            top: 120px; 
+            height: fit-content;
+          }
+
+          .sidebar-title {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+          }
+
+          /* El índice vuelve a ser una lista vertical */
+          .sidebar-nav {
+            flex-direction: column;
+            overflow-x: visible;
+            gap: 0.8rem;
+          }
+
+          .nav-link {
+            white-space: normal;
+            background: transparent;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+          }
+
+          .policy-content {
+            flex: 3 1 600px;
+            padding: 3rem; /* Padding amplio original */
+          }
+
+          .policy-article {
+            scroll-margin-top: 120px;
+          }
+        }
+      `}</style>
     </main>
   );
 }

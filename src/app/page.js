@@ -35,7 +35,6 @@ const hexToRgb = (hex) => {
   return "0,0,0";
 };
 
-// NUEVO: Función para calcular la edad exacta basada en la fecha de nacimiento
 const calculateAge = (dobString) => {
   const dob = new Date(dobString);
   const today = new Date();
@@ -64,13 +63,11 @@ export default function SorteosPage() {
   const [modal, setModal] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // ESTADO PARA EL FORMULARIO
   const [userData, setUserData] = useState({
     pais: "", provincia: "", ciudad: "", nombre: "", apellidos: "", telefono: "", email: "",
     fecha_nacimiento: "", es_mayor_edad: false
   });
   
-  // NUEVO: Estado para manejar el error de minoría de edad
   const [dobError, setDobError] = useState("");
 
   /* ── Fetch Initial Data ── */
@@ -118,7 +115,7 @@ export default function SorteosPage() {
   };
 
   const getWhatsAppUrl = (prizeName, nums) => {
-    const phoneNumber = "593994960278";
+    const phoneNumber = "593986936290";
     const message = `¡Hola Sorteos La Fortuna! 👋\n\nHe realizado una reserva para: *${prizeName}*.\nCliente: *${userData.nombre} ${userData.apellidos}*\nCiudad: *${userData.ciudad}*\nTeléfono: *${userData.telefono}*\nMis números: *${nums.join(" · ")}*.\nTotal a pagar: *$${tempReservation.total.toFixed(2)}*\n\nAdjunto comprobante.`;
     return `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
   };
@@ -133,11 +130,10 @@ export default function SorteosPage() {
     setShowPayment(true);
 
     setTimeout(() => {
-      document.getElementById('checkout-section')?.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('checkout-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, 100);
   };
 
-  // NUEVO: Función para manejar el cambio de fecha y validar edad en tiempo real
   const handleDateChange = (e) => {
     const dateStr = e.target.value;
     let isAdult = userData.es_mayor_edad;
@@ -147,7 +143,7 @@ export default function SorteosPage() {
       const age = calculateAge(dateStr);
       if (age < 18) {
         error = "Lo sentimos, debes ser mayor de 18 años para participar.";
-        isAdult = false; // Fuerza a desmarcar el checkbox si es menor
+        isAdult = false;
       }
     }
 
@@ -207,7 +203,6 @@ export default function SorteosPage() {
     }
   };
 
-  // Validación: Solo es válido si no hay error de fecha, la casilla está marcada y el resto de campos existen
   const isFormValid = userData.nombre && userData.apellidos && userData.telefono && userData.email && userData.ciudad && userData.fecha_nacimiento && userData.es_mayor_edad && paymentMethod && !dobError;
 
   /* ════════════════════════════════════════════════════════
@@ -230,12 +225,12 @@ export default function SorteosPage() {
       fontFamily: "var(--font-body)",
     }}>
 
-      <main id="sorteos-section" style={{ maxWidth: "960px", margin: "0 auto", padding: "6rem 5% 80px" }}>
+      <main id="sorteos-section" className="main-container">
 
         <section style={{ textAlign: "center", marginBottom: "4rem" }}>
           <h1 style={{
             fontFamily: "'Cinzel', serif",
-            fontSize: "clamp(2.8rem, 7vw, 4.5rem)",
+            fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
             fontWeight: 700,
             lineHeight: "1.3",
             margin: "0 0 1rem 0"
@@ -247,10 +242,11 @@ export default function SorteosPage() {
 
           <p style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: "1.2rem",
+            fontSize: "clamp(1rem, 3vw, 1.2rem)",
             fontStyle: "italic",
             color: "var(--text-secondary)",
-            marginBottom: "1.5rem"
+            marginBottom: "1.5rem",
+            padding: "0 1rem"
           }}>
             Participa en nuestros sorteos exclusivos y llévate premios extraordinarios.
           </p>
@@ -261,14 +257,11 @@ export default function SorteosPage() {
             <span style={{ fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.22em", color: "var(--accent-gold)", display: "block", marginBottom: "0.75rem" }}>
               ✦ Cartelera de Premios
             </span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.8rem", color: "var(--text-primary)", marginBottom: "2rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 2.8rem)", color: "var(--text-primary)", marginBottom: "2rem" }}>
               Explora nuestros <em style={{ fontStyle: "italic", color: "var(--accent-gold)" }}>Sorteos</em>
             </h2>
 
-            <div style={{
-              display: "flex", justifyContent: "center", gap: "1rem",
-              borderBottom: "1px solid var(--border-subtle)", paddingBottom: "1rem", marginBottom: "2.5rem"
-            }}>
+            <div className="tabs-container">
               {[
                 { id: "active", label: "Activos", icon: "🔥" },
                 { id: "upcoming", label: "Próximos", icon: "⏳" },
@@ -279,16 +272,17 @@ export default function SorteosPage() {
                   onClick={() => { setActiveTab(tab.id); setSelected(null); setShowPayment(false); }}
                   style={{
                     background: "transparent", border: "none", cursor: "pointer",
-                    padding: "0.5rem 1.5rem", position: "relative",
+                    padding: "0.5rem 1rem", position: "relative",
                     color: activeTab === tab.id ? "var(--accent-gold)" : "var(--text-muted)",
                     transition: "all 0.3s ease", fontFamily: "var(--font-body)",
-                    fontWeight: 700, fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.1em"
+                    fontWeight: 700, fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.1em",
+                    whiteSpace: "nowrap"
                   }}
                 >
                   {tab.icon} {tab.label}
                   {activeTab === tab.id && (
                     <div style={{
-                      position: "absolute", bottom: "-1rem", left: 0, right: 0,
+                      position: "absolute", bottom: "-0.5rem", left: 0, right: 0,
                       height: "2px", background: "var(--accent-gold)", boxShadow: "0 0 10px var(--accent-gold)"
                     }} />
                   )}
@@ -297,7 +291,7 @@ export default function SorteosPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "2rem", marginBottom: "4rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: "2rem", marginBottom: "4rem" }}>
             {filteredPrizes.length > 0 ? (
               filteredPrizes.map((prize) => {
                 const isFinished = activeTab === "finished";
@@ -411,8 +405,18 @@ export default function SorteosPage() {
                       {activeTab === 'active' && (
                         <button
                           onClick={() => {
+                            const isSelecting = !isActive;
                             setSelected(isActive ? null : prize.id);
                             setShowPayment(false);
+
+                            if (isSelecting) {
+                              setTimeout(() => {
+                                document.getElementById('numbers-section')?.scrollIntoView({ 
+                                  behavior: 'smooth', 
+                                  block: 'start' 
+                                });
+                              }, 150); 
+                            }
                           }}
                           style={{
                             width: "100%", marginTop: "1rem", padding: "0.8rem",
@@ -439,9 +443,9 @@ export default function SorteosPage() {
         </section>
         
         {activePrize && activeTab === 'active' && (
-          <section style={{
+          <section id="numbers-section" className="interactive-section" style={{
             background: "var(--bg-surface)", border: "1px solid var(--border-mid)",
-            borderRadius: "var(--r-xl)", padding: "3rem 2rem", marginTop: "2rem",
+            borderRadius: "var(--r-xl)", marginTop: "2rem",
             marginBottom: showPayment ? "2rem" : "5rem", boxShadow: "var(--card-shadow)",
             animation: "fadeUp 0.5s ease"
           }}>
@@ -450,14 +454,14 @@ export default function SorteosPage() {
                 <div style={{ width: "45px", height: "45px", borderRadius: "50%", overflow: "hidden", background: "var(--bg-sunken)", flexShrink: 0 }}>
                    <img src={activePrize.imagen_url || "/images/sorteos/galapagos-premio.png"} alt="Premio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.4rem, 4vw, 1.8rem)", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>
                   {activePrize.nombre}
                 </h2>
               </div>
               <div className="deco-line">
                 <div className="deco-diamond"></div>
               </div>
-              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
+              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: "0.5rem" }}>
                 Selecciona tus números de la suerte para este sorteo
               </p>
             </div>
@@ -509,8 +513,8 @@ export default function SorteosPage() {
                 disabled={!userPicks[activePrize.id]?.size}
                 style={{
                   background: "linear-gradient(135deg, var(--gold-300, #d4af37), var(--gold-500, #aa8c2c))",
-                  color: "#1a1a1a", padding: "0.8rem 2.5rem", border: "none", borderRadius: "var(--r-sm)",
-                  fontWeight: 700, cursor: "pointer",
+                  color: "#1a1a1a", padding: "0.8rem 1.5rem", border: "none", borderRadius: "var(--r-sm)",
+                  fontWeight: 700, cursor: "pointer", flex: "1 1 auto",
                   boxShadow: userPicks[activePrize.id]?.size ? "0 4px 15px rgba(201,168,76,0.3)" : "none",
                   opacity: userPicks[activePrize.id]?.size ? 1 : 0.5
                 }}
@@ -522,9 +526,9 @@ export default function SorteosPage() {
         )}
 
         {showPayment && tempReservation && (
-          <section id="checkout-section" style={{
+          <section id="checkout-section" className="interactive-section" style={{
             background: "var(--bg-surface)", border: "1px solid var(--border-mid)",
-            borderRadius: "var(--r-xl)", padding: "2rem 2rem", boxShadow: "var(--card-shadow)",
+            borderRadius: "var(--r-xl)", boxShadow: "var(--card-shadow)",
             animation: "slideUp 0.4s var(--ease)"
           }}>
 
@@ -533,8 +537,8 @@ export default function SorteosPage() {
               <div style={{ height: "2px", background: "var(--border-subtle)", marginTop: "0.5rem" }} />
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem", marginBottom: "1rem" }}>
-              <div style={{ gridColumn: "1 / -1" }}>
+            <div className="checkout-grid">
+              <div className="full-width">
                 <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>País *</label>
                 <select
                   value={userData.pais} onChange={(e) => setUserData({ ...userData, pais: e.target.value })}
@@ -545,7 +549,7 @@ export default function SorteosPage() {
                 </select>
               </div>
 
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div className="full-width">
                 <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Provincia *</label>
                 <select
                   value={userData.provincia} onChange={(e) => setUserData({ ...userData, provincia: e.target.value })}
@@ -556,7 +560,7 @@ export default function SorteosPage() {
                 </select>
               </div>
 
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div className="full-width">
                 <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Ciudad *</label>
                 <input
                   type="text" value={userData.ciudad} onChange={(e) => setUserData({ ...userData, ciudad: e.target.value })}
@@ -579,7 +583,7 @@ export default function SorteosPage() {
                 />
               </div>
 
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div className="full-width">
                 <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Teléfono *</label>
                 <input
                   type="tel" value={userData.telefono} onChange={(e) => setUserData({ ...userData, telefono: e.target.value })}
@@ -587,7 +591,7 @@ export default function SorteosPage() {
                 />
               </div>
 
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div className="full-width">
                 <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Correo electrónico *</label>
                 <input
                   type="email" value={userData.email} onChange={(e) => setUserData({ ...userData, email: e.target.value })}
@@ -595,8 +599,7 @@ export default function SorteosPage() {
                 />
               </div>
 
-              {/* CAMPO DE FECHA DE NACIMIENTO MODIFICADO */}
-              <div style={{ gridColumn: "1 / -1", marginTop: "0.5rem" }}>
+              <div className="full-width" style={{ marginTop: "0.5rem" }}>
                 <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Fecha de Nacimiento *</label>
                 <input
                   type="date" value={userData.fecha_nacimiento} onChange={handleDateChange}
@@ -609,8 +612,7 @@ export default function SorteosPage() {
                 )}
               </div>
 
-              {/* CHECKBOX BLOQUEABLE Y ALERTA VISUAL */}
-              <div style={{ gridColumn: "1 / -1", marginTop: "1rem", background: "var(--bg-elevated)", padding: "1.5rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-mid)", borderLeft: "4px solid var(--accent-ruby)", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }}>
+              <div className="full-width" style={{ marginTop: "1rem", background: "var(--bg-elevated)", padding: "1.5rem", borderRadius: "var(--r-md)", border: "1px solid var(--border-mid)", borderLeft: "4px solid var(--accent-ruby)", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" }}>
                 <label style={{ display: "flex", alignItems: "center", gap: "1rem", cursor: (dobError || !userData.fecha_nacimiento) ? "not-allowed" : "pointer", fontSize: "0.95rem", fontWeight: 700, color: (dobError || !userData.fecha_nacimiento) ? "var(--text-muted)" : "var(--text-primary)" }}>
                   <input
                     type="checkbox"
@@ -642,18 +644,9 @@ export default function SorteosPage() {
                 <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-muted)" }}>Total a pagar por {tempReservation.nums.length} boletos:</p>
                 <h3 style={{ color: "var(--accent-gold)", fontSize: "2.2rem", margin: "0.5rem 0 0" }}>${tempReservation.total.toFixed(2)}</h3>
               </div>
+              <label style={{ display: "block", fontSize: "0.85rem", marginBottom: "0.5rem", color: "var(--text-secondary)" }}>Selecciona el método de pago</label>
 
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-                <button onClick={() => setPaymentMethod('payphone')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'payphone' ? "2px solid #ff6b00" : "1px solid var(--border-mid)", background: "white", cursor: "pointer", transition: "all 0.2s" }}>
-                  <img src="https://www.payphone.app/wp-content/uploads/2021/05/logo-payphone.png" alt="Payphone" style={{ height: "20px" }} />
-                  <span style={{ fontWeight: 700, color: "#1a1a1a", fontSize: "0.9rem" }}>PayPhone</span>
-                </button>
-
-                <button onClick={() => setPaymentMethod('paypal')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'paypal' ? "2px solid #003087" : "1px solid var(--border-mid)", background: "white", cursor: "pointer", transition: "all 0.2s" }}>
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" style={{ height: "20px" }} />
-                  <span style={{ fontWeight: 700, color: "#1a1a1a", fontSize: "0.9rem" }}>PayPal / Tarjeta</span>
-                </button>
-
                 <button onClick={() => setPaymentMethod('transfer')} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.8rem", padding: "1rem", borderRadius: "var(--r-md)", border: paymentMethod === 'transfer' ? "2px solid var(--accent-gold)" : "1px solid var(--border-mid)", background: "var(--bg-sunken)", cursor: "pointer", color: "var(--text-primary)", transition: "all 0.2s" }}>
                   <span style={{ fontSize: "1.2rem" }}>🏦</span>
                   <div style={{ textAlign: "left" }}>
@@ -666,9 +659,9 @@ export default function SorteosPage() {
               {paymentMethod === 'transfer' && (
                 <div style={{ padding: "1.5rem", border: "1px dashed var(--accent-gold)", borderRadius: "var(--r-md)", fontSize: "0.9rem", animation: "fadeIn 0.3s", background: "var(--bg-elevated)" }}>
                   <p style={{ fontWeight: 700, color: "var(--accent-gold)", margin: "0 0 0.8rem" }}>Datos de la Cuenta:</p>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+                  <div className="bank-details-grid">
                     <span><b>Banco:</b> Pichincha (Ahorros)</span>
-                    <span><b>Cuenta:</b> 2200000000</span>
+                    <span><b>Cuenta:</b> 2208157036</span>
                     <span><b>Titular:</b> Sorteos La Fortuna S.A.</span>
                     <span><b>CI/RUC:</b> 0900000000001</span>
                   </div>
@@ -679,7 +672,7 @@ export default function SorteosPage() {
               )}
             </div>
 
-            <div style={{ marginTop: "3rem", paddingTop: "1.5rem", borderTop: "1px solid var(--border-subtle)", display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            <div className="checkout-actions">
               <button
                 onClick={() => setShowPayment(false)}
                 style={{ flex: 1, minWidth: "120px", padding: "1rem", borderRadius: "var(--r-sm)", border: "1px solid var(--border-mid)", background: "var(--bg-elevated)", color: "var(--text-secondary)", fontWeight: 700, cursor: "pointer" }}
@@ -700,7 +693,7 @@ export default function SorteosPage() {
                 }}
               >
                 {isProcessing ? "Procesando..." :
-                  !isFormValid ? (dobError ? "Debes ser mayor de 18 años para comprar" : "Completa todos los datos y acepta los términos") :
+                  !isFormValid ? (dobError ? "Debes ser mayor de 18 años" : "Completa todos los datos y acepta") :
                     paymentMethod === 'transfer' ? "Confirmar y enviar a WhatsApp 📱" : "Proceder al Pago Seguro"}
               </button>
             </div>
@@ -727,10 +720,10 @@ export default function SorteosPage() {
             }}
           >
             <div style={{
-              padding: "1.5rem 2rem", borderBottom: "1px solid var(--border-subtle)",
+              padding: "1.5rem 1.5rem", borderBottom: "1px solid var(--border-subtle)",
               display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-elevated)",
             }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
                 🎉 ¡Reserva Exitosa!
               </h2>
               <button
@@ -747,7 +740,7 @@ export default function SorteosPage() {
               </button>
             </div>
 
-            <div style={{ padding: "2rem", textAlign: "center" }}>
+            <div style={{ padding: "1.5rem", textAlign: "center" }}>
               <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>🎊</div>
 
               <p style={{ color: "var(--text-secondary)", marginBottom: "1.5rem", fontSize: "0.9rem" }}>
@@ -783,8 +776,8 @@ export default function SorteosPage() {
             </div>
 
             <div style={{
-              padding: "1.25rem 2rem", borderTop: "1px solid var(--border-subtle)",
-              display: "flex", justifyContent: "flex-end", gap: "0.75rem", background: "var(--bg-elevated)",
+              padding: "1.25rem 1.5rem", borderTop: "1px solid var(--border-subtle)",
+              display: "flex", justifyContent: "flex-end", gap: "0.75rem", background: "var(--bg-elevated)", flexWrap: "wrap"
             }}>
               <button
                 onClick={() => setModal(null)}
@@ -792,7 +785,7 @@ export default function SorteosPage() {
                   background: "var(--chip-bg)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)",
                   borderRadius: "var(--r-sm)", padding: "0.6rem 1.2rem", fontSize: "0.78rem", fontWeight: 700,
                   textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", transition: "all 0.3s",
-                  fontFamily: "var(--font-body)",
+                  fontFamily: "var(--font-body)", flex: "1 1 auto"
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--border-accent)"; e.currentTarget.style.color = "var(--accent-gold)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
@@ -805,7 +798,7 @@ export default function SorteosPage() {
                   background: "linear-gradient(135deg, var(--gold-300, #d4af37), var(--gold-500, #aa8c2c))",
                   color: "#1a1a1a", border: "none", borderRadius: "var(--r-sm)", padding: "0.6rem 1.4rem",
                   fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em",
-                  cursor: "pointer", transition: "all 0.3s", fontFamily: "var(--font-body)",
+                  cursor: "pointer", transition: "all 0.3s", fontFamily: "var(--font-body)", flex: "1 1 auto"
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(201,168,76,0.35)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
@@ -821,7 +814,87 @@ export default function SorteosPage() {
         @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeUp  { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        
         * { box-sizing: border-box; }
+
+        /* Estilos Responsivos Base */
+        .main-container {
+          max-width: 960px;
+          margin: 0 auto;
+          padding: 4rem 1rem 60px;
+        }
+
+        .tabs-container {
+          display: flex;
+          justify-content: center;
+          gap: 0.5rem;
+          border-bottom: 1px solid var(--border-subtle);
+          padding-bottom: 1rem;
+          margin-bottom: 2.5rem;
+          flex-wrap: wrap;
+        }
+
+        .interactive-section {
+          padding: 1.5rem 1rem;
+        }
+
+        /* Grilla del formulario de pago */
+        .checkout-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        
+        .full-width {
+          grid-column: 1 / -1;
+        }
+
+        .bank-details-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
+
+        /* Botones de acción al final del pago */
+        .checkout-actions {
+          margin-top: 2rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid var(--border-subtle);
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        /* --- MEDIA QUERIES PARA TABLET Y PC --- */
+        @media (min-width: 600px) {
+          .bank-details-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+        }
+
+        @media (min-width: 768px) {
+          .main-container {
+            padding: 6rem 5% 80px;
+          }
+          
+          .tabs-container {
+            gap: 1rem;
+          }
+
+          .interactive-section {
+            padding: 3rem 2rem;
+          }
+
+          .checkout-grid {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .checkout-actions {
+            flex-direction: row;
+            margin-top: 3rem;
+          }
+        }
       `}</style>
     </div>
   );
