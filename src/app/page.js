@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import HeroCarousel from "@/app/components/home/heroCarousel";
 
 /* ══════════════════════════════════════
    HELPERS
@@ -67,7 +68,7 @@ export default function SorteosPage() {
     pais: "", provincia: "", ciudad: "", nombre: "", apellidos: "", telefono: "", email: "",
     fecha_nacimiento: "", es_mayor_edad: false
   });
-  
+
   const [dobError, setDobError] = useState("");
 
   /* ── Fetch Initial Data ── */
@@ -91,6 +92,7 @@ export default function SorteosPage() {
     };
     fetchSorteos();
   }, []);
+
 
   /* ── Derived ── */
   const activePrize = prizes.find((p) => p.id === selected) || null;
@@ -217,8 +219,9 @@ export default function SorteosPage() {
   }
 
   return (
+
     <div style={{
-      minHeight: "100vh",
+      minHeight: "050vh",
       background: "var(--bg-base)",
       color: "var(--text-primary)",
       transition: "background 0.5s, color 0.5s",
@@ -227,29 +230,10 @@ export default function SorteosPage() {
 
       <main id="sorteos-section" className="main-container">
 
-        <section style={{ textAlign: "center", marginBottom: "4rem" }}>
-          <h1 style={{
-            fontFamily: "'Cinzel', serif",
-            fontSize: "clamp(2.5rem, 7vw, 4.5rem)",
-            fontWeight: 700,
-            lineHeight: "1.3",
-            margin: "0 0 1rem 0"
-          }}>
-            <span style={{ color: "var(--accent-gold)" }}>Sorteos</span>{" "}
-            <span style={{ color: "var(--text-primary)" }}>La</span>{" "}
-            <span style={{ color: "var(--accent-ruby)" }}>Fortuna</span>
-          </h1>
-
-          <p style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(1rem, 3vw, 1.2rem)",
-            fontStyle: "italic",
-            color: "var(--text-secondary)",
-            marginBottom: "1.5rem",
-            padding: "0 1rem"
-          }}>
-            Participa en nuestros sorteos exclusivos y llévate premios extraordinarios.
-          </p>
+        <section style={{ textAlign: "center", marginBottom: "-5.5rem" }}>
+          <div style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
+            <HeroCarousel />
+          </div>
         </section>
 
         <section>
@@ -411,11 +395,11 @@ export default function SorteosPage() {
 
                             if (isSelecting) {
                               setTimeout(() => {
-                                document.getElementById('numbers-section')?.scrollIntoView({ 
-                                  behavior: 'smooth', 
-                                  block: 'start' 
+                                document.getElementById('numbers-section')?.scrollIntoView({
+                                  behavior: 'smooth',
+                                  block: 'start'
                                 });
-                              }, 150); 
+                              }, 150);
                             }
                           }}
                           style={{
@@ -441,7 +425,7 @@ export default function SorteosPage() {
             )}
           </div>
         </section>
-        
+
         {activePrize && activeTab === 'active' && (
           <section id="numbers-section" className="interactive-section" style={{
             background: "var(--bg-surface)", border: "1px solid var(--border-mid)",
@@ -452,7 +436,7 @@ export default function SorteosPage() {
             <div style={{ marginBottom: "2rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.75rem" }}>
                 <div style={{ width: "45px", height: "45px", borderRadius: "50%", overflow: "hidden", background: "var(--bg-sunken)", flexShrink: 0 }}>
-                   <img src={activePrize.imagen_url || "/images/sorteos/galapagos-premio.png"} alt="Premio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src={activePrize.imagen_url || "/images/sorteos/galapagos-premio.png"} alt="Premio" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.4rem, 4vw, 1.8rem)", fontWeight: 700, margin: 0, color: "var(--text-primary)" }}>
                   {activePrize.nombre}
@@ -623,7 +607,7 @@ export default function SorteosPage() {
                   />
                   Declaro que soy mayor de edad (18+ años) *
                 </label>
-                
+
                 <div style={{ display: "flex", gap: "0.8rem", marginTop: "1rem", alignItems: "flex-start" }}>
                   <span style={{ fontSize: "1.2rem" }}>⚠️</span>
                   <p style={{ margin: 0, fontSize: "0.8rem", color: "var(--text-secondary)", fontStyle: "italic", lineHeight: "1.5" }}>
