@@ -34,7 +34,6 @@ export default function Footer() {
           </div>
         </div>
 
-
         {/* Legal - Secciones actualizadas según Prompt Maestro  */}
         <div>
           <h4 style={{ fontSize: "0.7rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "1.25rem" }}>Información Legal</h4>
@@ -49,11 +48,11 @@ export default function Footer() {
                 Política de Privacidad
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link href="/page/datos-personales" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
                 Tratamiento de Datos Personales
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>
