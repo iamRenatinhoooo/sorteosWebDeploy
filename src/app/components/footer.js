@@ -34,6 +34,7 @@ export default function Footer() {
           </div>
         </div>
 
+
         {/* Legal - Secciones actualizadas según Prompt Maestro  */}
         <div>
           <h4 style={{ fontSize: "0.7rem", color: "var(--accent-gold)", textTransform: "uppercase", marginBottom: "1.25rem" }}>Información Legal</h4>
