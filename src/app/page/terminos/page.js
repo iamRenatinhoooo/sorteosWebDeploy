@@ -105,38 +105,46 @@ export default function TerminosYCondiciones() {
               <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 1. Aceptación de los Términos
               </h2>
-              <p style={{ marginBottom: "1rem" }}>
-                El acceso y uso de la plataforma Sorteos La Fortuna implica la aceptación plena, expresa e incondicional de los presentes Términos y Condiciones por parte del usuario. Al registrarse o participar en cualquier sorteo, usted declara haber leído y comprendido la totalidad de este documento jurídico y su vinculación legal.
+              <p style={{ marginBottom: "0.5rem" }}>
+                El acceso y uso de la plataforma Sorteos La Fortuna implica la aceptación plena, expresa e incondicional de los presentes Términos y Condiciones por parte del usuario. Al registrarse, proporcionar sus datos personales o participar en cualquier sorteo, el usuario declara:
               </p>
+              <ol style={{ marginBottom: "0.5rem", listStyleType: "disc", paddingLeft: "20px" }}>
+                <li>Haber leído, comprendido y aceptado la totalidad de este documento.</li>
+                <li>Ser mayor de edad (18 años o más).</li>
+                <li>Que toda la información proporcionada durante el registro es veraz y actualizada.</li>
+              </ol>
               <p>
-                En caso de no estar de acuerdo con alguna de las disposiciones aquí establecidas, el usuario deberá abstenerse inmediatamente de utilizar los servicios de la plataforma. El uso continuado del sitio tras cualquier modificación constituye la aceptación de los nuevos términos.
+                En caso de no estar de acuerdo con alguna de las disposiciones aquí establecidas, el usuario deberá abstenerse de utilizar los servicios de la plataforma. El uso continuado del sitio tras cualquier modificación de estos términos implicará la aceptación de dichos cambios.
               </p>
             </article>
 
             <article id="requisitos" className="term-article">
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "0.5rem", fontFamily: "'Cinzel', serif" }}>
                 2. Requisitos de Participación
               </h2>
               <p style={{ marginBottom: "1rem" }}>
-                Para participar en los sorteos, es requisito indispensable ser persona natural mayor de 18 años de edad al momento de la adquisición del boleto. Sorteos La Fortuna se reserva el derecho de solicitar la verificación de la mayoría de edad mediante documento de identidad oficial.
+                Para participar en los sorteos, es requisito indispensable ser una persona natural mayor de 18 años al momento de su participación. Sorteos La Fortuna se reserva el derecho de verificar la mayoría de edad del usuario mediante la solicitud de un documento de identidad oficial.
               </p>
               <p>
-                El participante deberá poseer una cédula de identidad o pasaporte ecuatoriano válido y estar domiciliado dentro del territorio de la República del Ecuador. Queda prohibida la participación a personas inhabilitadas legalmente.
+                El participante deberá contar con una cédula de identidad o pasaporte válido y residir dentro del territorio de la República del Ecuador. No podrán participar aquellas personas que se encuentren legalmente inhabilitadas para hacerlo, de conformidad con la normativa vigente.
               </p>
             </article>
 
             <article id="adquisicion" className="term-article">
-              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
+              <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "0.5rem", fontFamily: "'Cinzel', serif" }}>
                 3. Adquisición de Boletos
               </h2>
-              <p style={{ marginBottom: "1rem" }}>
-                Cada boleto adquirido otorga el derecho de participación exclusivamente para un sorteo específico e individualizado, identificado por su nombre y fecha en la plataforma. La adquisición de un boleto no garantiza la obtención de un premio, sino el derecho a participar en el proceso de selección aleatoria.
+              <p style={{ marginBottom: "0.5rem" }}>
+                La participación en cada sorteo se realiza mediante la selección de uno o varios números disponibles dentro del sistema, los cuales representan las oportunidades de participación del usuario en dicho sorteo.
               </p>
-              <p style={{ marginBottom: "1rem" }}>
-                Rige una política estricta de no devolución de los importes pagados por los boletos, salvo en casos de cancelación total del sorteo por causas imputables directamente a la organización. Salvo que se indique lo contrario en la descripción del premio, existe un límite máximo de 10 boletos por persona para cada sorteo con el fin de garantizar la equidad en la participación.
+              <p style={{ marginBottom: "0.5rem" }}>
+                Cada número seleccionado otorga al usuario la oportunidad de resultar ganador dentro de un sorteo específico, identificado por su nombre, premio y fecha de realización en la plataforma. La asignación de múltiples boletos incrementa proporcionalmente las probabilidades de ganar, sin que ello garantice la obtención de un premio.
+              </p>
+              <p style={{ marginBottom: "0.5rem" }}>
+                Rige una política estricta de no devolución de los importes pagados por los boletos, salvo en casos de cancelación total del sorteo por causas imputables directamente a la organización. Salvo que se indique lo contrario en la descripción del sorteo, podrá establecerse un límite máximo de boletos por participante con el fin de garantizar la equidad en el proceso.
               </p>
               <p>
-                El proceso de reserva se completa únicamente tras la confirmación efectiva del pago a través de los canales autorizados. Una vez validado el pago (sea mediante transferencia o pasarela digital), el sistema emitirá un comprobante digital que acredita la titularidad de los números seleccionados.
+                El proceso se completa únicamente tras la confirmación efectiva del pago a través de los canales autorizados. Una vez validado el pago (sea mediante transferencia), el sistema emitirá un comprobante digital que acredita la titularidad de los números seleccionados.
               </p>
             </article>
 
@@ -160,13 +168,13 @@ export default function TerminosYCondiciones() {
                 5. Entrega de Premios
               </h2>
               <p style={{ marginBottom: "1rem" }}>
-                Tras la finalización del sorteo, el ganador será notificado oficialmente por Sorteos La Fortuna en un plazo máximo de 48 horas a través del correo electrónico o número telefónico proporcionado en su registro. El ganador dispondrá de un plazo máximo de 30 días calendario para reclamar su premio.
+                Una vez finalizado el sorteo, el ganador será notificado por Sorteos La Fortuna en un plazo máximo de 48 horas, a través de los medios de contacto proporcionados durante su registro (correo electrónico y/o número telefónico). En caso de no obtener respuesta dentro de este período, Sorteos La Fortuna se reserva el derecho de realizar un nuevo sorteo para seleccionar a un nuevo ganador, perdiendo el anterior cualquier derecho sobre el premio.
               </p>
               <p style={{ marginBottom: "1rem" }}>
-                <strong>Logística de Entrega:</strong> Con el fin de asegurar la integridad del premio y la satisfacción del usuario, los premios serán entregados de manera presencial a través del servicio de Entrega de Servientrega en la dirección consignada por el ganador al momento de la validación. Este servicio especializado garantiza el seguimiento y la seguridad del artículo durante el tránsito.
+                La modalidad de entrega del premio será mediante Servientrega. Algunos premios podrán ser entregados únicamente en la ciudad de Guayaquil, mientras que otros podrán ser enviados a diferentes provincias del país, lo cual será especificado previamente en la descripción de cada sorteo.
               </p>
               <p>
-                Es condición obligatoria la presentación del documento de identidad original para la verificación de los datos antes de la entrega física del premio. Los premios son estrictamente personales, no transferibles a terceros y bajo ninguna circunstancia podrán ser canjeados por su valor en dinero en efectivo u otros bienes.
+                Los premios son personales y no transferibles a terceros. Bajo ninguna circunstancia podrán ser canjeados por dinero en efectivo ni por otros bienes distintos al ofrecido originalmente.
               </p>
             </article>
 
@@ -175,10 +183,10 @@ export default function TerminosYCondiciones() {
                 6. Ley Aplicable y Jurisdicción
               </h2>
               <p style={{ marginBottom: "1rem" }}>
-                Para todos los efectos legales derivados del uso de esta plataforma, las partes se someten expresamente a las leyes vigentes de la República del Ecuador.
+                Los presentes Términos y Condiciones se rigen por las leyes vigentes de la República del Ecuador.
               </p>
               <p>
-                Cualquier controversia técnica o jurídica será resuelta ante los jueces y tribunales competentes de la ciudad de Guayaquil, provincia del Guayas, renunciando los participantes a cualquier otro fuero o jurisdicción.
+                Cualquier controversia o conflicto que pudiera surgir en relación con el uso de la plataforma o la participación en los sorteos será resuelto por los jueces y tribunales competentes de la ciudad de Guayaquil, provincia del Guayas.
               </p>
             </article>
 

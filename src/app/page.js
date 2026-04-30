@@ -1,8 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
 import HeroCarousel from "@/app/components/home/heroCarousel";
 
+=======
+import HeroSection from "./components/HeroSection";
+import { PrizeTabs, PrizeCard } from './components/SorteosComponents';
+import { NumbersGrid } from './components/activeTab';
+import { CheckoutForm } from './components/CheckoutForm';
+import { SuccessModal } from './components/SuccessModal';
+import './Sorteos.css';
+>>>>>>> d2e6c5d410a6916c110ffe65c4f9caddd02f8f43
 /* ══════════════════════════════════════
    HELPERS
 ══════════════════════════════════════ */
@@ -229,54 +238,39 @@ export default function SorteosPage() {
     }}>
 
       <main id="sorteos-section" className="main-container">
+        {/* sorteosWebDeploy\src\app\components\HeroSection.jsx */}
+        <HeroSection />
 
+<<<<<<< HEAD
         <section style={{ textAlign: "center", marginBottom: "-5.5rem" }}>
           <div style={{ minHeight: "100vh", background: "var(--bg-base)" }}>
             <HeroCarousel />
           </div>
         </section>
 
+=======
+        {/* sorteosWebDeploy\src\app\components\SorteosComponents.jsx */}
+>>>>>>> d2e6c5d410a6916c110ffe65c4f9caddd02f8f43
         <section>
           <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <span style={{ fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.22em", color: "var(--accent-gold)", display: "block", marginBottom: "0.75rem" }}>
+            <span style={{ fontSize: "0.68rem", textTransform: "uppercase", color: "var(--accent-gold)" }}>
               ✦ Cartelera de Premios
             </span>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 2.8rem)", color: "var(--text-primary)", marginBottom: "2rem" }}>
-              Explora nuestros <em style={{ fontStyle: "italic", color: "var(--accent-gold)" }}>Sorteos</em>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.8rem" }}>
+              Explora nuestros <em style={{ color: "var(--accent-gold)" }}>Sorteos</em>
             </h2>
 
-            <div className="tabs-container">
-              {[
-                { id: "active", label: "Activos", icon: "🔥" },
-                { id: "upcoming", label: "Próximos", icon: "⏳" },
-                { id: "finished", label: "Finalizados", icon: "🏆" }
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => { setActiveTab(tab.id); setSelected(null); setShowPayment(false); }}
-                  style={{
-                    background: "transparent", border: "none", cursor: "pointer",
-                    padding: "0.5rem 1rem", position: "relative",
-                    color: activeTab === tab.id ? "var(--accent-gold)" : "var(--text-muted)",
-                    transition: "all 0.3s ease", fontFamily: "var(--font-body)",
-                    fontWeight: 700, fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.1em",
-                    whiteSpace: "nowrap"
-                  }}
-                >
-                  {tab.icon} {tab.label}
-                  {activeTab === tab.id && (
-                    <div style={{
-                      position: "absolute", bottom: "-0.5rem", left: 0, right: 0,
-                      height: "2px", background: "var(--accent-gold)", boxShadow: "0 0 10px var(--accent-gold)"
-                    }} />
-                  )}
-                </button>
-              ))}
-            </div>
+            <PrizeTabs 
+              activeTab={activeTab} 
+              setActiveTab={setActiveTab} 
+              setSelected={setSelected} 
+              setShowPayment={setShowPayment} 
+            />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 280px), 1fr))", gap: "2rem", marginBottom: "4rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "2rem" }}>
             {filteredPrizes.length > 0 ? (
+<<<<<<< HEAD
               filteredPrizes.map((prize) => {
                 const isFinished = activeTab === "finished";
                 const isUpcoming = activeTab === "upcoming";
@@ -418,13 +412,27 @@ export default function SorteosPage() {
                   </div>
                 );
               })
+=======
+              filteredPrizes.map((prize) => (
+                <PrizeCard
+                  key={prize.id}
+                  prize={prize}
+                  activeTab={activeTab}
+                  selected={selected}
+                  setSelected={setSelected}
+                  setShowPayment={setShowPayment}
+                  taken={takenMap[prize.id]?.size || 0}
+                  timeLeft={calculateTimeLeft(prize.fecha_sorteo, prize.hora_sorteo)}
+                  hexToRgb={hexToRgb}
+                />
+              ))
+>>>>>>> d2e6c5d410a6916c110ffe65c4f9caddd02f8f43
             ) : (
-              <div style={{ gridColumn: "1/-1", textAlign: "center", padding: "4rem", color: "var(--text-muted)" }}>
-                No hay sorteos en esta categoría.
-              </div>
+              <div style={{ gridColumn: "1/-1", textAlign: "center" }}>No hay sorteos.</div>
             )}
           </div>
         </section>
+<<<<<<< HEAD
 
         {activePrize && activeTab === 'active' && (
           <section id="numbers-section" className="interactive-section" style={{
@@ -507,9 +515,24 @@ export default function SorteosPage() {
               </button>
             </div>
           </section>
+=======
+        
+        {/* sorteosWebDeploy/src/app/components/activeTab.jsx */}
+        {activePrize && activeTab === 'active' && (
+          <NumbersGrid 
+            activePrize={activePrize}
+            takenMap={takenMap}
+            userPicks={userPicks}
+            handleNumberClick={handleNumberClick}
+            handleReserve={handleReserve}
+            showPayment={showPayment}
+          />
+>>>>>>> d2e6c5d410a6916c110ffe65c4f9caddd02f8f43
         )}
 
+        {/* sorteosWebDeploy\src\app\components\CheckoutForm.jsx */}
         {showPayment && tempReservation && (
+<<<<<<< HEAD
           <section id="checkout-section" className="interactive-section" style={{
             background: "var(--bg-surface)", border: "1px solid var(--border-mid)",
             borderRadius: "var(--r-xl)", boxShadow: "var(--card-shadow)",
@@ -682,204 +705,31 @@ export default function SorteosPage() {
               </button>
             </div>
           </section>
+=======
+          <CheckoutForm 
+            showPayment={showPayment}
+            tempReservation={tempReservation}
+            userData={userData}
+            setUserData={setUserData}
+            handleDateChange={handleDateChange}
+            dobError={dobError}
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+            isProcessing={isProcessing}
+            isFormValid={isFormValid}
+            setShowPayment={setShowPayment}
+            confirmFinalPurchase={confirmFinalPurchase}
+          />
+>>>>>>> d2e6c5d410a6916c110ffe65c4f9caddd02f8f43
         )}
 
       </main>
 
-      {modal && (
-        <div
-          onClick={() => setModal(null)}
-          style={{
-            position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", backdropFilter: "blur(6px)",
-            display: "flex", alignItems: "center", justifyContent: "center", zIndex: 999, padding: "1rem",
-            animation: "fadeIn 0.25s ease",
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "var(--bg-elevated)", border: "1px solid var(--border-mid)",
-              borderRadius: "var(--r-xl)", width: "100%", maxWidth: "500px", overflow: "hidden",
-              animation: "slideUp 0.3s var(--ease)",
-            }}
-          >
-            <div style={{
-              padding: "1.5rem 1.5rem", borderBottom: "1px solid var(--border-subtle)",
-              display: "flex", alignItems: "center", justifyContent: "space-between", background: "var(--bg-elevated)",
-            }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: "var(--text-primary)", margin: 0 }}>
-                🎉 ¡Reserva Exitosa!
-              </h2>
-              <button
-                onClick={() => setModal(null)}
-                style={{
-                  width: "32px", height: "32px", background: "var(--chip-bg)", border: "1px solid var(--border-subtle)",
-                  borderRadius: "50%", color: "var(--text-muted)", fontSize: "1.1rem", display: "flex", alignItems: "center",
-                  justifyContent: "center", cursor: "pointer", transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-ruby)"; e.currentTarget.style.color = "#fff"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "var(--chip-bg)"; e.currentTarget.style.color = "var(--text-muted)"; }}
-              >
-                ×
-              </button>
-            </div>
 
-            <div style={{ padding: "1.5rem", textAlign: "center" }}>
-              <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>🎊</div>
+      {/* sorteosWebDeploy\src\app\components\SuccessModal.jsx */}
+      <SuccessModal modal={modal} setModal={setModal} />
 
-              <p style={{ color: "var(--text-secondary)", marginBottom: "1.5rem", fontSize: "0.9rem" }}>
-                Has reservado números para{" "}
-                <span style={{ color: "var(--accent-gold)", fontWeight: 700, fontFamily: "'Cinzel', serif" }}>
-                  {modal.prize.nombre}
-                </span>
-              </p>
 
-              <div style={{
-                background: "var(--bg-sunken)", border: "1px solid var(--border-mid)",
-                borderRadius: "var(--r-lg)", padding: "1.5rem", marginBottom: "1.5rem",
-              }}>
-                <div className="label-xs" style={{ marginBottom: "0.75rem" }}>
-                  Tus Números de Suerte
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, transparent, var(--border-mid), transparent)" }} />
-                  <div style={{ width: "6px", height: "6px", background: "var(--accent-gold)", transform: "rotate(45deg)", flexShrink: 0 }} />
-                  <div style={{ flex: 1, height: "1px", background: "linear-gradient(to right, transparent, var(--border-mid), transparent)" }} />
-                </div>
-                <p style={{
-                  margin: 0, fontSize: "1.8rem", fontFamily: "'Cinzel', serif", fontWeight: 700,
-                  color: "var(--accent-gold)", letterSpacing: "0.1em",
-                }}>
-                  {modal.nums.sort((a, b) => a - b).join(" · ")}
-                </p>
-              </div>
-
-              <p style={{ color: "var(--text-muted)", fontSize: "0.78rem", marginBottom: "1.5rem" }}>
-                Guarda una captura de pantalla como comprobante 📸
-              </p>
-            </div>
-
-            <div style={{
-              padding: "1.25rem 1.5rem", borderTop: "1px solid var(--border-subtle)",
-              display: "flex", justifyContent: "flex-end", gap: "0.75rem", background: "var(--bg-elevated)", flexWrap: "wrap"
-            }}>
-              <button
-                onClick={() => setModal(null)}
-                style={{
-                  background: "var(--chip-bg)", color: "var(--text-secondary)", border: "1px solid var(--border-subtle)",
-                  borderRadius: "var(--r-sm)", padding: "0.6rem 1.2rem", fontSize: "0.78rem", fontWeight: 700,
-                  textTransform: "uppercase", letterSpacing: "0.08em", cursor: "pointer", transition: "all 0.3s",
-                  fontFamily: "var(--font-body)", flex: "1 1 auto"
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "var(--border-accent)"; e.currentTarget.style.color = "var(--accent-gold)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "var(--border-subtle)"; e.currentTarget.style.color = "var(--text-secondary)"; }}
-              >
-                Cerrar
-              </button>
-              <button
-                onClick={() => setModal(null)}
-                style={{
-                  background: "linear-gradient(135deg, var(--gold-300, #d4af37), var(--gold-500, #aa8c2c))",
-                  color: "#1a1a1a", border: "none", borderRadius: "var(--r-sm)", padding: "0.6rem 1.4rem",
-                  fontSize: "0.8rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em",
-                  cursor: "pointer", transition: "all 0.3s", fontFamily: "var(--font-body)", flex: "1 1 auto"
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(201,168,76,0.35)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
-              >
-                ✦ ¡Entendido!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style>{`
-        @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeUp  { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-        
-        * { box-sizing: border-box; }
-
-        /* Estilos Responsivos Base */
-        .main-container {
-          max-width: 960px;
-          margin: 0 auto;
-          padding: 4rem 1rem 60px;
-        }
-
-        .tabs-container {
-          display: flex;
-          justify-content: center;
-          gap: 0.5rem;
-          border-bottom: 1px solid var(--border-subtle);
-          padding-bottom: 1rem;
-          margin-bottom: 2.5rem;
-          flex-wrap: wrap;
-        }
-
-        .interactive-section {
-          padding: 1.5rem 1rem;
-        }
-
-        /* Grilla del formulario de pago */
-        .checkout-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 1rem;
-          margin-bottom: 1rem;
-        }
-        
-        .full-width {
-          grid-column: 1 / -1;
-        }
-
-        .bank-details-grid {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 0.5rem;
-        }
-
-        /* Botones de acción al final del pago */
-        .checkout-actions {
-          margin-top: 2rem;
-          padding-top: 1.5rem;
-          border-top: 1px solid var(--border-subtle);
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        /* --- MEDIA QUERIES PARA TABLET Y PC --- */
-        @media (min-width: 600px) {
-          .bank-details-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-        }
-
-        @media (min-width: 768px) {
-          .main-container {
-            padding: 6rem 5% 80px;
-          }
-          
-          .tabs-container {
-            gap: 1rem;
-          }
-
-          .interactive-section {
-            padding: 3rem 2rem;
-          }
-
-          .checkout-grid {
-            grid-template-columns: 1fr 1fr;
-          }
-
-          .checkout-actions {
-            flex-direction: row;
-            margin-top: 3rem;
-          }
-        }
-      `}</style>
     </div>
   );
 }

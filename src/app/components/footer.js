@@ -48,11 +48,11 @@ export default function Footer() {
                 Política de Privacidad
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link href="/page/datos-personales" style={{ transition: "color 0.3s" }} onMouseEnter={(e) => e.target.style.color = "var(--accent-gold)"} onMouseLeave={(e) => e.target.style.color = "inherit"}>
                 Tratamiento de Datos Personales
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

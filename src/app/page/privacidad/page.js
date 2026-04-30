@@ -150,14 +150,16 @@ export default function PoliticaPrivacidad() {
               <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 2. Datos que Recopilamos
               </h2>
-              <ul style={{ paddingLeft: "1.2rem", margin: 0 }}>
-                <li>Identificativos: Nombre completo y número de cédula/pasaporte.</li>
-                <li>Contacto: Correo electrónico y teléfono móvil.</li>
-                <li>Transaccionales: Referencias de transferencias y confirmaciones de pago.</li>
-                <li>Técnicos: Dirección IP y cookies de navegación.</li>
+              <p style={{ marginBottom: "1rem" }}>
+                La plataforma recopila únicamente los datos necesarios para el funcionamiento de los sorteos y la correcta gestión de los usuarios. Entre ellos se incluyen:
+              </p>
+              <ul style={{ marginBottom: "0.5rem", listStyleType: "disc", paddingLeft: "20px" }}>
+                <li>Datos de identificación básica: País, provincia, ciudad y fecha de nacimiento.</li>
+                <li>Datos de contacto: Correo electrónico y número de teléfono móvil.</li>
+                <li>Datos transaccionales: Información relacionada con pagos realizados, como referencias de transferencias o confirmaciones de pago.</li>
               </ul>
-              <p style={{ fontSize: "0.85rem", marginTop: "1rem", fontStyle: "italic", marginBottom: 0 }}>
-                * No almacenamos datos de tarjetas de crédito; el procesamiento es externo y seguro.
+              <p>
+                La plataforma no solicita ni almacena datos sensibles como números de cédula, pasaporte o información bancaria confidencial. Los pagos son procesados a través de medios externos autorizados, por lo que Sorteos La Fortuna no tiene acceso directo a datos financieros como números de tarjetas de crédito o débito.
               </p>
             </article>
 
@@ -166,7 +168,15 @@ export default function PoliticaPrivacidad() {
                 3. Finalidad del Tratamiento
               </h2>
               <p>
-                La finalidad principal es gestionar su participación activa en los sorteos y verificar el cumplimiento de los requisitos legales (mayoría de edad y residencia). También utilizamos su información para la emisión de comprobantes fiscales y notificaciones críticas de seguridad.
+                Los datos personales recopilados son utilizados con las siguientes finalidades:
+              </p>
+              <ul style={{ marginBottom: "0.5rem", listStyleType: "disc", paddingLeft: "20px" }}>
+                <li>Gestionar la participación del usuario en los sorteos, incluyendo la asignación de números y el registro de su participación.  </li>
+                <li>Verificar el cumplimiento de los requisitos establecidos en la plataforma, como la mayoría de edad. </li>
+                <li> Contactar al usuario en relación con los sorteos, incluyendo notificaciones de resultados o comunicación con ganadores.</li>
+              </ul>
+              <p>
+                En ningún caso los datos personales serán utilizados para fines distintos a los aquí establecidos.
               </p>
             </article>
 
@@ -174,8 +184,11 @@ export default function PoliticaPrivacidad() {
               <h2 style={{ color: "var(--accent-gold)", fontSize: "clamp(1.1rem, 3vw, 1.3rem)", marginBottom: "1rem", fontFamily: "'Cinzel', serif" }}>
                 6. Compartición con Terceros
               </h2>
+              <p style={{ marginBottom: "1rem" }}>
+                Sorteos La Fortuna no vende, alquila ni cede los datos personales de los usuarios a terceros con fines comerciales. La información podrá ser compartida únicamente con proveedores de servicios necesarios para el funcionamiento de la plataforma, quienes actuarán como encargados del tratamiento de datos y estarán obligados a garantizar la confidencialidad y seguridad de la información.
+              </p>
               <p>
-                No vendemos ni cedemos sus datos a terceros con fines comerciales. Su información solo es compartida con encargados del tratamiento esenciales, como proveedores de hosting o <strong>Servientrega</strong> para la logística de entrega de premios.
+                En ningún caso se realizará una cesión de datos distinta a las aquí descritas sin el consentimiento previo del usuario, salvo obligación legal.
               </p>
             </article>
 
